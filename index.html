@@ -849,6 +849,229 @@
       catalogo_de_servicos_renderizar();
     </script>
 
+    <section data-tela="solicitar-orcamento" class="hidden">
+  <div class="px-5 pt-2 pb-6">
+    <div class="mb-5">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-semibold text-marca-500 font-body uppercase tracking-wider">Solicitação</span>
+        <span id="etapa-label" class="text-xs font-body text-slate-500">Etapa 1 de 5</span>
+      </div>
+      <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+        <div id="barra-progresso" class="h-full bg-marca-500 rounded-full transition-all duration-500 ease-out" style="width:20%"></div>
+      </div>
+    </div>
+    <h1 class="text-2xl font-display font-bold text-marca-900 mb-1">Solicitar Orçamento</h1>
+    <p class="text-sm text-slate-500 font-body mb-5">Preencha os dados abaixo para solicitar um orçamento e agendar uma visita técnica.</p>
+    <div id="etapas-container"></div>
+    <div class="flex gap-3 mt-6">
+      <button id="btn-voltar" onclick="solicitar_orcamento_voltar()" class="hidden flex-1 py-3.5 px-4 rounded-xl border-2 border-marca-200 text-marca-700 font-body font-semibold text-sm active:scale-95 transition-all hover:bg-marca-50">
+        Voltar
+      </button>
+      <button id="btn-avancar" onclick="solicitar_orcamento_avancar()" class="flex-1 py-3.5 px-4 rounded-xl bg-marca-500 text-white font-body font-semibold text-sm active:scale-95 transition-all shadow-lg shadow-marca-500/25 hover:bg-marca-600 flex items-center justify-center gap-2">
+        <span id="btn-avancar-text">Próximo</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="modal-sucesso-overlay" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-5">
+    <div class="bg-white rounded-2xl p-8 max-w-xs w-full text-center transform transition-all scale-100">
+      <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <h3 class="text-xl font-display font-bold text-marca-900 mb-2">Solicitação Enviada!</h3>
+      <p class="text-sm text-slate-500 font-body mb-1">Seu orçamento foi solicitado com sucesso.</p>
+      <p class="text-xs text-slate-400 font-body mb-5">Um técnico entrará em contato em até 24h. Você receberá uma notificação quando o orçamento estiver pronto.</p>
+      <button onclick="solicitar_orcamento_fecharSucesso()" class="w-full py-3.5 rounded-xl bg-marca-500 text-white font-body font-semibold text-sm active:scale-95 transition-all">Ir para Minha Agenda</button>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    var estado = { etapa: 0, tipoObra: '', fotos: [], endereco: '', latitude: -23.5505, longitude: -46.6333, nome: '', telefone: '(11) 99999-9999', email: 'carlos@email.com', descricao: '', dataVisita: '', observacoes: '', servicoSelecionado: null };
+    var tiposObra = [{id:'reforma_completa',nome:'Reforma Completa',icone:'🏠',desc:'Reforma total de residência ou comércio'},{id:'construcao',nome:'Construção Nova',icone:'🏗️',desc:'Construção do zero, residencial ou comercial'},{id:'reforma_banheiro',nome:'Reforma de Banheiro',icone:'🚿',desc:'Apenas banheiro ou área úmida'},{id:'reforma_cozinha',nome:'Reforma de Cozinha',icone:'🍳',desc:'Apenas cozinha'},{id:'pintura',nome:'Pintura',icone:'🎨',desc:'Pintura interna e/ou externa'},{id:'telhado',nome:'Telhado e Estrutura',icone:'🔨',desc:'Reparo ou troca de telhado, estrutura metálica'},{id:'piso',nome:'Piso e Revestimento',icone:'🧱',desc:'Colocação de piso, azulejo, revestimento'},{id:'eletrica',nome:'Elétrica',icone:'⚡',desc:'Instalação ou reforma elétrica completa'},{id:'hidraulica',nome:'Hidráulica',icone:'🔧',desc:'Instalação ou reforma hidráulica'},{id:'outro',nome:'Outro',icone:'📋',desc:'Outro tipo de obra ou serviço'}];
+    var fotosExemplo = [{cor:'bg-orange-100',iniciais:'RE',label:'Reforma Escada'},{cor:'bg-blue-100',iniciais:'PL',label:'Planta Baixa'},{cor:'bg-green-100',iniciais:'AR',label:'Área Externa'}];
+
+    function renderizar() {
+      var container = document.getElementById('etapas-container');
+      var etapas = [
+        {titulo:'Tipo de Obra',subtitulo:'Selecione o tipo de serviço desejado',conteudo:renderizarEtapa1},
+        {titulo:'Fotos do Local',subtitulo:'Anexe fotos do local da obra',conteudo:renderizarEtapa2},
+        {titulo:'Endereço',subtitulo:'Informe onde será realizada a obra',conteudo:renderizarEtapa3},
+        {titulo:'Seus Dados',subtitulo:'Informações para contato',conteudo:renderizarEtapa4},
+        {titulo:'Detalhes',subtitulo:'Descreva seu projeto',conteudo:renderizarEtapa5}
+      ];
+      var e = etapas[estado.etapa];
+      document.getElementById('etapa-label').textContent = 'Etapa ' + (estado.etapa+1) + ' de 5';
+      document.getElementById('barra-progresso').style.width = ((estado.etapa+1)/5*100)+'%';
+      document.getElementById('btn-voltar').classList.toggle('hidden', estado.etapa === 0);
+      document.getElementById('btn-avancar-text').textContent = estado.etapa === 4 ? 'Solicitar Visita' : 'Próximo';
+      container.innerHTML = '<div class="animate-fadeIn">' + e.conteudo() + '</div>';
+      if (estado.etapa === 4) {
+        document.getElementById('btn-avancar').classList.add('bg-green-600','shadow-green-600/25');
+        document.getElementById('btn-avancar').classList.remove('bg-marca-500','shadow-marca-500/25');
+      } else {
+        document.getElementById('btn-avancar').classList.remove('bg-green-600','shadow-green-600/25');
+        document.getElementById('btn-avancar').classList.add('bg-marca-500','shadow-marca-500/25');
+      }
+      solicitar_orcamento_attachEvents();
+    }
+
+    function renderizarEtapa1() {
+      var html = '<p class="text-sm text-slate-500 font-body mb-3">Escolha o tipo de obra ou serviço que você precisa:</p>';
+      html += '<div class="grid grid-cols-2 gap-2.5">';
+      tiposObra.forEach(function(t) {
+        var sel = estado.tipoObra === t.id ? 'border-marca-500 bg-marca-50 ring-1 ring-marca-500' : 'border-slate-200 bg-white hover:border-marca-300';
+        html += '<button onclick="solicitar_orcamento_selecionarTipo(\'' + t.id + '\')" class="card text-left p-3.5 rounded-xl border-2 ' + sel + ' transition-all active:scale-95">';
+        html += '<span class="text-2xl block mb-1.5">' + t.icone + '</span>';
+        html += '<span class="block text-sm font-display font-bold text-marca-900">' + t.nome + '</span>';
+        html += '<span class="block text-xs text-slate-400 font-body mt-0.5 leading-tight">' + t.desc + '</span>';
+        html += '</button>';
+      });
+      html += '</div>';
+      return html;
+    }
+
+    function renderizarEtapa2() {
+      var html = '<p class="text-sm text-slate-500 font-body mb-3">Adicione fotos do local para um orçamento mais preciso. Você pode tirar uma foto ou escolher da galeria.</p>';
+      html += '<div id="fotos-grid" class="grid grid-cols-3 gap-2.5 mb-3">';
+      estado.fotos.forEach(function(f, i) {
+        html += '<div class="relative aspect-square rounded-xl ' + f.cor + ' flex flex-col items-center justify-center p-2 border border-slate-200">';
+        html += '<span class="text-xs font-body font-bold text-marca-800 mb-1">' + f.label + '</span>';
+        html += '<span class="text-lg font-display font-bold text-marca-600">' + f.iniciais + '</span>';
+        html += '<button onclick="solicitar_orcamento_removerFoto(' + i + ')" class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center active:scale-90 transition-transform"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg></button>';
+        html += '</div>';
+      });
+      html += '</div>';
+      html += '<div class="flex gap-2.5">';
+      html += '<button onclick="solicitar_orcamento_adicionarFoto(\'camera\')" class="flex-1 py-3.5 border-2 border-dashed border-marca-300 rounded-xl text-marca-600 font-body text-sm font-semibold flex items-center justify-center gap-2 active:scale-95 transition-all hover:bg-marca-50"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Câmera</button>';
+      html += '<button onclick="solicitar_orcamento_adicionarFoto(\'galeria\')" class="flex-1 py-3.5 border-2 border-dashed border-marca-300 rounded-xl text-marca-600 font-body text-sm font-semibold flex items-center justify-center gap-2 active:scale-95 transition-all hover:bg-marca-50"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Galeria</button>';
+      html += '</div>';
+      html += '<p class="text-xs text-slate-400 font-body mt-2.5">Formatos aceitos: JPG, PNG. Máximo 10MB por foto.</p>';
+      return html;
+    }
+
+    function renderizarEtapa3() {
+      var html = '<p class="text-sm text-slate-500 font-body mb-3">Informe o endereço da obra. Clique no mapa para confirmar a localização exata.</p>';
+      html += '<div class="relative w-full h-48 rounded-xl overflow-hidden mb-3 bg-slate-200 border border-slate-200">';
+      html += '<div class="absolute inset-0" style="background:linear-gradient(135deg,#e2e8f0 0%,#cbd5e1 50%,#94a3b8 100%)">';
+      html += '<svg class="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 400 200"><pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M 30 0 L 0 0 0 30" fill="none" stroke="#64748b" stroke-width="0.5"/></pattern><rect width="400" height="200" fill="url(#grid)"/></svg>';
+      html += '<div class="absolute top-3 left-3 bg-white/90 backdrop-blur rounded-lg px-2.5 py-1.5"><span class="text-xs font-body font-semibold text-marca-800">R. Augusta, 1500</span><br><span class="text-xs text-slate-400 font-body">Jardins, São Paulo - SP</span></div>';
+      html += '<div class="absolute inset-0 flex items-center justify-center"><div class="relative"><div class="w-8 h-8 bg-marca-500 rounded-full border-4 border-white shadow-lg shadow-marca-500/40 flex items-center justify-center"><div class="w-2 h-2 bg-white rounded-full"></div></div><div class="absolute -bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap"><span class="text-xs font-body font-bold text-marca-700 bg-white/80 px-1.5 py-0.5 rounded">Local confirmado</span></div></div></div>';
+      html += '</div>';
+      html += '</div>';
+      html += '<div class="relative mb-3"><svg class="absolute left-3.5 top-3.5 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>';
+      html += '<input id="endereco-input" type="text" value="Rua Augusta, 1500, Jardins" class="w-full pl-11 pr-4 py-3.5 rounded-xl border border-slate-200 bg-white font-body text-sm text-marca-900 focus:outline-none focus:ring-2 focus:ring-marca-500 focus:border-transparent transition-all" placeholder="Digite o endereço da obra">';
+      html += '</div>';
+      html += '<div class="flex gap-2"><button onclick="solicitar_orcamento_usarLocalizacao()" class="flex-1 py-2.5 rounded-lg bg-marca-50 text-marca-600 text-xs font-body font-semibold active:scale-95 transition-all flex items-center justify-center gap-1.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>Usar minha localização</button><button onclick="solicitar_orcamento_buscarCep()" class="flex-1 py-2.5 rounded-lg bg-marca-50 text-marca-600 text-xs font-body font-semibold active:scale-95 transition-all flex items-center justify-center gap-1.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>Buscar por CEP</button></div>';
+      html += '<div class="mt-3 flex items-center gap-2 text-xs text-green-600 font-body"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Localização confirmada no mapa</div>';
+      return html;
+    }
+
+    function renderizarEtapa4() {
+      var html = '<p class="text-sm text-slate-500 font-body mb-3">Dados para contato e identificação do responsável pela obra.</p>';
+      html += '<div class="space-y-3">';
+      html += '<div><label class="block text-xs font-body font-semibold text-marca-800 mb-1.5 uppercase tracking-wide">Nome completo</label>';
+      html += '<input id="input-nome" type="text" value="' + estado.nome + '" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-white font-body text-sm text-marca-900 focus:outline-none focus:ring-2 focus:ring-marca-500 focus:border-transparent transition-all" placeholder="Seu nome completo"></div>';
+      html += '<div><label class="block text-xs font-body font-semibold text-marca-800 mb-1.5 uppercase tracking-wide">Telefone / WhatsApp</label>';
+      html += '<input id="input-telefone" type="tel" value="' + estado.telefone + '" oninput="solicitar_orcamento_mascaraTelefone(this)" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-white font-body text-sm text-marca-900 focus:outline-none focus:ring-2 focus:ring-marca-500 focus:border-transparent transition-all" placeholder="(00) 00000-0000"></div>';
+      html += '<div><label class="block text-xs font-body font-semibold text-marca-800 mb-1.5 uppercase tracking-wide">E-mail</label>';
+      html += '<input id="input-email" type="email" value="' + estado.email + '" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-white font-body text-sm text-marca-900 focus:outline-none focus:ring-2 focus:ring-marca-500 focus:border-transparent transition-all" placeholder="seu@email.com"></div>';
+      html += '<div class="bg-marca-50 rounded-xl p-3 flex items-start gap-2.5"><svg class="w-5 h-5 text-marca-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+      html += '<p class="text-xs text-slate-500 font-body">Seus dados estão protegidos. Usamos o WhatsApp para enviar atualizações sobre seu orçamento.</p></div>';
+      html += '</div></div>';
+      return html;
+    }
+
+    function renderizarEtapa5() {
+      var tiposMap = {}; tiposObra.forEach(function(t){tiposMap[t.id]=t.nome;});
+      var html = '<p class="text-sm text-slate-500 font-body mb-3">Descreva o projeto e defina quando gostaria da visita técnica.</p>';
+      html += '<div class="space-y-3">';
+      html += '<div class="bg-white rounded-xl p-3.5 border border-slate-200 flex items-center gap-3"><span class="text-xl">' + (tiposMap[estado.tipoObra] ? '📋' : '') + '</span><div><span class="block text-xs text-slate-400 font-body">Tipo de obra</span><span class="block text-sm font-display font-bold text-marca-900">' + (tiposMap[estado.tipoObra] || 'Não selecionado') + '</span></div></div>';
+      html += '<div><label class="block text-xs font-body font-semibold text-marca-800 mb-1.5 uppercase tracking-wide">Descrição do projeto</label>';
+      html += '<textarea id="input-descricao" rows="4" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-white font-body text-sm text-marca-900 focus:outline-none focus:ring-2 focus:ring-marca-500 focus:border-transparent transition-all resize-none" placeholder="Descreva detalhes da obra: metragem, materiais desejados, preferências...">' + estado.descricao + '</textarea></div>';
+      html += '<div><label class="block text-xs font-body font-semibold text-marca-800 mb-1.5 uppercase tracking-wide">Data preferida para visita técnica</label>';
+      var amanha = new Date(); amanha.setDate(amanha.getDate()+1); var minDate = amanha.toISOString().split('T')[0];
+      html += '<input id="input-data" type="date" min="' + minDate + '" value="' + estado.dataVisita + '" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-white font-body text-sm text-marca-900 focus:outline-none focus:ring-2 focus:ring-marca-500 focus:border-transparent transition-all"></div>';
+      html += '<div><label class="block text-xs font-body font-semibold text-marca-800 mb-1.5 uppercase tracking-wide">Observações adicionais</label>';
+      html += '<textarea id="input-obs" rows="2" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-white font-body text-sm text-marca-900 focus:outline-none focus:ring-2 focus:ring-marca-500 focus:border-transparent transition-all resize-none" placeholder="Informações extras que julgar importantes...">' + estado.observacoes + '</textarea></div>';
+      html += '</div>';
+      return html;
+    }
+
+    window.solicitar_orcamento_attachEvents = function() {};
+    window.solicitar_orcamento_selecionarTipo = function(id) { estado.tipoObra = id; renderizar(); };
+    window.solicitar_orcamento_adicionarFoto = function(origem) {
+      var labels = ['Frente da Obra','Área Interna','Detalhe Estrutural','Outro Ângulo'];
+      var cores = ['bg-amber-100','bg-sky-100','bg-emerald-100','bg-purple-100'];
+      var idx = estado.fotos.length;
+      if (estado.fotos.length >= 8) { toast('Máximo de 8 fotos permitido.', 'erro'); return; }
+      estado.fotos.push({cor: cores[idx % 4], iniciais: 'FT' + (idx+1), label: labels[idx % 4]});
+      toast('Foto adicionada com sucesso!', 'ok');
+      renderizar();
+    };
+    window.solicitar_orcamento_removerFoto = function(i) {
+      estado.fotos.splice(i, 1);
+      toast('Foto removida.', 'info');
+      renderizar();
+    };
+    window.solicitar_orcamento_usarLocalizacao = function() { toast('Localização capturada com sucesso!', 'ok'); };
+    window.solicitar_orcamento_buscarCep = function() { toast('Busca de CEP disponível em breve.', 'info'); };
+    window.solicitar_orcamento_mascaraTelefone = function(el) {
+      var v = el.value.replace(/\D/g,''); if (v.length > 11) v = v.slice(0,11);
+      if (v.length > 7) el.value = '(' + v.slice(0,2) + ') ' + v.slice(2,7) + '-' + v.slice(7);
+      else if (v.length > 2) el.value = '(' + v.slice(0,2) + ') ' + v.slice(2);
+      else el.value = v;
+    };
+
+    window.solicitar_orcamento_avancar = function() {
+      if (estado.etapa === 0 && !estado.tipoObra) { toast('Selecione o tipo de obra para continuar.', 'erro'); return; }
+      if (estado.etapa === 2) { var inp = document.getElementById('endereco-input'); if (inp && !inp.value.trim()) { toast('Informe o endereço da obra.', 'erro'); return; } }
+      if (estado.etapa === 3) {
+        var n = document.getElementById('input-nome'), t = document.getElementById('input-telefone'), em = document.getElementById('input-email');
+        if (n) estado.nome = n.value;
+        if (t) estado.telefone = t.value;
+        if (em) estado.email = em.value;
+        if (!estado.nome.trim()) { toast('Informe seu nome.', 'erro'); return; }
+        if (estado.telefone.replace(/\D/g,'').length < 10) { toast('Informe um telefone válido.', 'erro'); return; }
+      }
+      if (estado.etapa === 4) {
+        var d = document.getElementById('input-descricao'), dt = document.getElementById('input-data'), o = document.getElementById('input-obs');
+        if (d) estado.descricao = d.value;
+        if (dt) estado.dataVisita = dt.value;
+        if (o) estado.observacoes = o.value;
+        if (!estado.dataVisita) { toast('Selecione uma data para a visita técnica.', 'erro'); return; }
+        enviarSolicitacao();
+        return;
+      }
+      estado.etapa++;
+      renderizar();
+    };
+
+    window.solicitar_orcamento_voltar = function() {
+      if (estado.etapa > 0) { estado.etapa--; renderizar(); }
+    };
+
+    function enviarSolicitacao() {
+      var overlay = document.getElementById('modal-sucesso-overlay');
+      overlay.classList.remove('hidden');
+      setTimeout(function() { mostrarTela('minha-agenda'); }, 3500);
+    }
+    window.solicitar_orcamento_fecharSucesso = function() {
+      document.getElementById('modal-sucesso-overlay').classList.add('hidden');
+      estado = { etapa:0, tipoObra:'', fotos:[], endereco:'', nome:'', telefone:'', email:'', descricao:'', dataVisita:'', observacoes:'', servicoSelecionado:null };
+      mostrarTela('minha-agenda');
+    };
+    window.solicitar_orcamento_iniciar = function(servicoId) {
+      estado = { etapa:0, tipoObra: servicoId || '', fotos:[], endereco:'', nome:'', telefone:'', email:'', descricao:'', dataVisita:'', observacoes:'', servicoSelecionado: servicoId };
+      if (servicoId) estado.etapa = 0;
+      mostrarTela('solicitar-orcamento');
+      setTimeout(renderizar, 50);
+    };
+    if (typeof solicitar_orcamento_iniciar === 'undefined') { window.solicitar_orcamento_iniciar = window.solicitar_orcamento_iniciar; }
+  })();
+  </script>
+</section>
+
     <!-- TELAS -->
 
   <script>
