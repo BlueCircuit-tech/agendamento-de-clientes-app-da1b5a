@@ -3237,6 +3237,421 @@
 })();
 </script>
 
+    <section data-tela="perfil-e-configuracoes" class="hidden">
+      <div class="px-5 pt-2 pb-6 space-y-4">
+
+        <!-- HEADER DO PERFIL -->
+        <div class="flex items-center gap-4">
+          <div class="w-16 h-16 rounded-full bg-gradient-to-br from-marca-900 to-marca flex items-center justify-center text-white font-display font-bold text-xl flex-shrink-0 ring-4 ring-marca/20">
+            RS
+          </div>
+          <div class="min-w-0">
+            <h1 class="font-display font-bold text-xl text-gray-900 leading-tight">Rafael Santos</h1>
+            <span class="inline-flex items-center gap-1.5 mt-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-marca-900 text-white">
+              <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+              Administrador
+            </span>
+          </div>
+        </div>
+
+        <!-- CARDS DE INDICADOR -->
+        <div class="grid grid-cols-3 gap-2.5">
+          <div class="bg-white rounded-xl p-3 border border-gray-100 shadow-sm text-center">
+            <p class="text-xs text-gray-500 mb-0.5">Obras ativas</p>
+            <p class="font-display font-bold text-lg text-gray-900">8</p>
+          </div>
+          <div class="bg-white rounded-xl p-3 border border-gray-100 shadow-sm text-center">
+            <p class="text-xs text-gray-500 mb-0.5">Orçamentos</p>
+            <p class="font-display font-bold text-lg text-marca">4</p>
+          </div>
+          <div class="bg-white rounded-xl p-3 border border-gray-100 shadow-sm text-center">
+            <p class="text-xs text-gray-500 mb-0.5">Equipe</p>
+            <p class="font-display font-bold text-lg text-gray-900">12</p>
+          </div>
+        </div>
+
+        <!-- MINHAS OBRAS RÁPIDAS -->
+        <div id="perfil-obras-card">
+          <div class="flex items-center justify-between mb-2.5">
+            <h2 class="font-display font-bold text-sm text-gray-900 uppercase tracking-wide">Minhas Obras</h2>
+            <button onclick="mostrarTela('mapa-de-obras')" class="text-xs text-marca font-semibold hover:underline">Ver todas</button>
+          </div>
+          <div class="space-y-2" id="perfil-obras-lista"></div>
+        </div>
+
+        <!-- MEUS DADOS -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <button onclick="perfil_e_configuracoes_toggleDados()" class="w-full flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors active:scale-[0.98] transition-transform">
+            <div class="w-10 h-10 rounded-xl bg-marca-50 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-marca" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="flex-1 text-left">
+              <p class="font-display font-semibold text-gray-900 text-[15px]">Meus Dados</p>
+              <p class="text-xs text-gray-500 mt-0.5">Nome, CPF, telefone, endereço</p>
+            </div>
+            <svg class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+          <div id="perfil-dados-form" class="hidden border-t border-gray-100 px-4 py-3 space-y-3">
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Nome completo</label>
+              <input id="inp-nome" type="text" value="Rafael Santos" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:ring-2 focus:ring-marca/20 focus:border-marca outline-none transition-all" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">CPF</label>
+              <input id="inp-cpf" type="text" value="123.456.789-00" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:ring-2 focus:ring-marca/20 focus:border-marca outline-none transition-all" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Telefone</label>
+              <input id="inp-tel" type="text" value="(11) 98765-4321" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:ring-2 focus:ring-marca/20 focus:border-marca outline-none transition-all" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Endereço</label>
+              <input id="inp-end" type="text" value="Av. Paulista, 1000, São Paulo - SP" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:ring-2 focus:ring-marca/20 focus:border-marca outline-none transition-all" />
+            </div>
+            <div class="flex gap-2 pt-1">
+              <button onclick="perfil_e_configuracoes_salvarDados()" class="flex-1 bg-marca text-white font-semibold text-sm py-2.5 rounded-xl active:scale-95 transition-all hover:bg-marca-900">Salvar alterações</button>
+              <button onclick="perfil_e_configuracoes_toggleDados()" class="px-4 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-600 font-semibold active:scale-95 transition-all">Cancelar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTIFICAÇÕES -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <button onclick="perfil_e_configuracoes_toggleNotif()" class="w-full flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors active:scale-[0.98] transition-transform">
+            <div class="w-10 h-10 rounded-xl bg-marca-50 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-marca" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+            </div>
+            <div class="flex-1 text-left">
+              <p class="font-display font-semibold text-gray-900 text-[15px]">Notificações</p>
+              <p class="text-xs text-gray-500 mt-0.5">Push, WhatsApp e e-mail</p>
+            </div>
+            <svg class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+          <div id="perfil-notif-form" class="hidden border-t border-gray-100 px-4 py-3 space-y-3">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Por canal</p>
+            <div class="flex items-center justify-between"><span class="text-sm text-gray-700">Push no app</span>
+              <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" checked class="sr-only peer" onchange="perfil_e_configuracoes_toggleNotifCanal(this,'Push no app')"><div class="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-marca/20 rounded-full peer peer-checked:bg-marca transition-all after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div></label></div>
+            <div class="flex items-center justify-between"><span class="text-sm text-gray-700">WhatsApp</span>
+              <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" checked class="sr-only peer" onchange="perfil_e_configuracoes_toggleNotifCanal(this,'WhatsApp')"><div class="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-marca/20 rounded-full peer peer-checked:bg-marca transition-all after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div></label></div>
+            <div class="flex items-center justify-between"><span class="text-sm text-gray-700">E-mail</span>
+              <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" class="sr-only peer" onchange="perfil_e_configuracoes_toggleNotifCanal(this,'E-mail')"><div class="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-marca/20 rounded-full peer peer-checked:bg-marca transition-all after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div></label></div>
+            <div class="border-t border-gray-100 pt-3">
+              <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Por tipo de alerta</p>
+              <div class="space-y-2.5">
+                <div class="flex items-center justify-between"><span class="text-sm text-gray-700">Agendamentos</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" checked class="sr-only peer" onchange="perfil_e_configuracoes_toggleNotifCanal(this,'Agendamentos')"><div class="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-marca/20 rounded-full peer peer-checked:bg-marca transition-all after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div></label></div>
+                <div class="flex items-center justify-between"><span class="text-sm text-gray-700">Novos orçamentos</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" checked class="sr-only peer" onchange="perfil_e_configuracoes_toggleNotifCanal(this,'Orçamentos')"><div class="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-marca/20 rounded-full peer peer-checked:bg-marca transition-all after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div></label></div>
+                <div class="flex items-center justify-between"><span class="text-sm text-gray-700">Mensagens da equipe</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" checked class="sr-only peer" onchange="perfil_e_configuracoes_toggleNotifCanal(this,'Mensagens')"><div class="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-marca/20 rounded-full peer peer-checked:bg-marca transition-all after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div></label></div>
+                <div class="flex items-center justify-between"><span class="text-sm text-gray-700">Pagamentos</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" checked class="sr-only peer" onchange="perfil_e_configuracoes_toggleNotifCanal(this,'Pagamentos')"><div class="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-marca/20 rounded-full peer peer-checked:bg-marca transition-all after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div></label></div>
+                <div class="flex items-center justify-between"><span class="text-sm text-gray-700">Fotos e documentos</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" class="sr-only peer" onchange="perfil_e_configuracoes_toggleNotifCanal(this,'Fotos e docs')"><div class="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-marca/20 rounded-full peer peer-checked:bg-marca transition-all after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div></label></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAGAMENTOS -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <button onclick="perfil_e_configuracoes_togglePagamentos()" class="w-full flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors active:scale-[0.98] transition-transform">
+            <div class="w-10 h-10 rounded-xl bg-marca-50 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-marca" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </div>
+            <div class="flex-1 text-left">
+              <p class="font-display font-semibold text-gray-900 text-[15px]">Pagamentos</p>
+              <p class="text-xs text-gray-500 mt-0.5">Cartões salvos e histórico</p>
+            </div>
+            <svg class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+          <div id="perfil-pagamentos-form" class="hidden border-t border-gray-100">
+            <div class="px-4 py-3">
+              <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Cartões salvos</p>
+              <div class="space-y-2" id="perfil-cartoes-lista"></div>
+              <button onclick="perfil_e_configuracoes_addCartao()" class="w-full mt-2 py-2.5 border-2 border-dashed border-gray-200 rounded-xl text-sm text-gray-500 font-semibold hover:border-marca hover:text-marca transition-colors active:scale-95">+ Adicionar cartão</button>
+            </div>
+            <div class="border-t border-gray-100 px-4 py-3">
+              <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Histórico recente</p>
+              <div class="space-y-2" id="perfil-historico-lista"></div>
+            </div>
+            <div class="px-4 pb-3">
+              <button onclick="mostrarTela('acompanhar-orcamento')" class="text-sm text-marca font-semibold hover:underline">Ver histórico completo →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- AJUDA E SUPORTE -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <button onclick="perfil_e_configuracoes_toggleAjuda()" class="w-full flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors active:scale-[0.98] transition-transform">
+            <div class="w-10 h-10 rounded-xl bg-marca-50 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-marca" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div class="flex-1 text-left">
+              <p class="font-display font-semibold text-gray-900 text-[15px]">Ajuda e Suporte</p>
+              <p class="text-xs text-gray-500 mt-0.5">FAQ, contato e termos de uso</p>
+            </div>
+            <svg class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+          <div id="perfil-ajuda-form" class="hidden border-t border-gray-100 px-4 py-3">
+            <div class="space-y-1 mb-3" id="perfil-faq-lista"></div>
+            <div class="border-t border-gray-100 pt-3 space-y-2">
+              <button onclick="mostrarTela('chat-com-a-equipe')" class="w-full flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors active:scale-[0.98]">
+                <svg class="w-5 h-5 text-marca" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span class="text-sm font-semibold text-gray-700">Falar com a equipe</span>
+              </button>
+              <button onclick="abrirModal('<div class=\'space-y-3 text-sm text-gray-600\'><p><strong class=\'text-gray-900\'>Termos de Uso</strong></p><p>Os serviços são prestados conforme condições acordadas no contrato. O uso da plataforma implica aceitação dos termos vigentes.</p><p class=\'text-xs text-gray-400\'>Última atualização: Janeiro 2025</p></div>','Termos de Uso')" class="w-full flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors active:scale-[0.98]">
+                <svg class="w-5 h-5 text-marca" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <span class="text-sm font-semibold text-gray-700">Termos de Uso</span>
+              </button>
+              <button onclick="abrirModal('<div class=\'space-y-3 text-sm text-gray-600\'><p><strong class=\'text-gray-900\'>Política de Privacidade</strong></p><p>Seus dados são protegidos conforme a LGPD. Não compartilhamos informações com terceiros sem consentimento.</p></div>','Política de Privacidade')" class="w-full flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors active:scale-[0.98]">
+                <svg class="w-5 h-5 text-marca" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <span class="text-sm font-semibold text-gray-700">Política de Privacidade</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- GERENCIAR USUÁRIOS (APENAS ADMIN) -->
+        <div id="perfil-admin-section" class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <div class="p-4 border-b border-gray-100">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-marca-50 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-marca" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <div>
+                <h2 class="font-display font-bold text-sm text-gray-900 uppercase tracking-wide">Gerenciar Usuários</h2>
+                <p class="text-xs text-gray-500">Equipe e clientes cadastrados</p>
+              </div>
+            </div>
+            <button onclick="perfil_e_configuracoes_abrirModalNovoUsuario()" class="w-full bg-marca text-white font-semibold text-sm py-2.5 rounded-xl active:scale-95 transition-all hover:bg-marca-900 flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Adicionar novo usuário
+            </button>
+          </div>
+          <div class="p-4 pt-3">
+            <div class="relative mb-3">
+              <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input id="perfil-busca-equipe" type="text" placeholder="Buscar na equipe..." oninput="perfil_e_configuracoes_buscarEquipe(this.value)" class="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-marca/20 focus:border-marca outline-none transition-all" />
+            </div>
+            <div class="space-y-2" id="perfil-equipe-lista"></div>
+            <div id="perfil-equipe-vazia" class="hidden py-8 text-center">
+              <svg class="w-10 h-10 text-gray-300 mx-auto mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <p class="text-sm text-gray-500">Nenhum usuário encontrado</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SAIR -->
+        <button onclick="perfil_e_configuracoes_confirmarSaida()" class="w-full flex items-center justify-center gap-2 p-4 rounded-2xl border border-red-200 text-red-600 font-semibold text-sm hover:bg-red-50 transition-colors active:scale-[0.98]">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sair da conta
+        </button>
+
+        <p class="text-center text-[11px] text-gray-400 pt-1">ObrasApp v1.2.0 · ConstruCivil Tecnologia</p>
+      </div>
+
+      <script>
+      const perfil_e_configuracoes_dadosUsuario = { nome: 'Rafael Santos', cpf: '123.456.789-00', telefone: '(11) 98765-4321', endereco: 'Av. Paulista, 1000, São Paulo - SP', cargo: 'admin' };
+      const perfil_e_configuracoes_obras = [
+        { id: 1, nome: 'Residência Jardins', cliente: 'Carlos Eduardo', progresso: 72, status: 'Em andamento', cor: 'bg-emerald-100 text-emerald-700' },
+        { id: 2, nome: 'Edifício Aurora', cliente: 'Construtora Horizonte', progresso: 45, status: 'Em andamento', cor: 'bg-amber-100 text-amber-700' },
+        { id: 3, nome: 'Reforma Apartamento Vila Madalena', cliente: 'Fernanda Oliveira', progresso: 90, status: 'Quase pronto', cor: 'bg-marca-50 text-marca' }
+      ];
+      const perfil_e_configuracoes_cartoes = [
+        { bandeira: 'Visa', final: '•••• 4532', validade: '12/27', principal: true },
+        { bandeira: 'Mastercard', final: '•••• 8891', validade: '08/26', principal: false }
+      ];
+      const perfil_e_configuracoes_historico = [
+        { desc: 'Orçamento #128 — Reforma', valor: 8500, data: '2025-01-15', status: 'Pago', cor: 'text-emerald-600' },
+        { desc: 'Orçamento #125 — Construção', valor: 45000, data: '2025-01-08', status: 'Pendente', cor: 'text-amber-600' },
+        { desc: 'Orçamento #121 — Reforma', valor: 6200, data: '2024-12-20', status: 'Pago', cor: 'text-emerald-600' }
+      ];
+      const perfil_e_configuracoes_faq = [
+        { pergunta: 'Como agendar uma visita técnica?', resposta: 'Acesse "Solicitar Orçamento" no menu, preencha os dados da obra e escolha a data e horário desejados. Nossa equipe confirmará em até 24h.' },
+        { pergunta: 'Quais formas de pagamento são aceitas?', resposta: 'Aceitamos Pix, cartão de crédito (até 12x), cartão de débito e boleto bancário. Parcelamento disponível a partir de R$ 1.000.' },
+        { pergunta: 'Como anexar fotos da obra?', resposta: 'Na tela da obra, toque no ícone de câmera ou galeria para enviar fotos. Elas ficam disponíveis para toda a equipe e o cliente.' },
+        { pergunta: 'Como cancelar ou remarcar um agendamento?', resposta: 'Acesse "Minha Agenda", toque no agendamento e selecione "Remarcar" ou "Cancelar". Cancelamentos com menos de 24h podem ter taxa.' }
+      ];
+      const perfil_e_configuracoes_equipe = [
+        { id: 1, nome: 'Carlos Mendes', cargo: 'admin', email: 'carlos@obrasapp.com.br', cor: 'bg-marca-900' },
+        { id: 2, nome: 'Ana Beatriz Silva', cargo: 'tecnico', email: 'ana@obrasapp.com.br', cor: 'bg-marca' },
+        { id: 3, nome: 'João Pedro Costa', cargo: 'tecnico', email: 'joao@obrasapp.com.br', cor: 'bg-amber-600' },
+        { id: 4, nome: 'Fernanda Lima', cargo: 'cliente', email: 'fernanda@email.com', cor: 'bg-emerald-600' },
+        { id: 5, nome: 'Pedro Henrique Souza', cargo: 'cliente', email: 'pedro@email.com', cor: 'bg-violet-600' },
+        { id: 6, nome: 'Mariana Rocha', cargo: 'tecnico', email: 'mariana@obrasapp.com.br', cor: 'bg-rose-600' }
+      ];
+
+      function perfil_e_configuracoes_getRoleLabel(c) {
+        const r = { admin: 'Administrador', tecnico: 'Técnico', cliente: 'Cliente' };
+        const b = { admin: 'bg-marca-900 text-white', tecnico: 'bg-marca-50 text-marca', cliente: 'bg-emerald-50 text-emerald-700' };
+        return { label: r[c] || c, badge: b[c] || 'bg-gray-100 text-gray-600' };
+      }
+
+      function perfil_e_configuracoes_renderObras() {
+        const c = document.getElementById('perfil-obras-lista');
+        if (!c) return;
+        c.innerHTML = perfil_e_configuracoes_obras.map(o => `
+          <button onclick="mostrarTela('mapa-de-obras')" class="w-full flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors active:scale-[0.98]">
+            <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-marca to-marca-900 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 21h18M3 7v14M21 7v14M6 7V3h12v4M9 21v-4h6v4M9 11h.01M15 11h.01M9 15h.01M15 15h.01"/></svg>
+            </div>
+            <div class="flex-1 min-w-0 text-left">
+              <p class="text-sm font-semibold text-gray-900 truncate">${o.nome}</p>
+              <p class="text-xs text-gray-500">${o.cliente}</p>
+            </div>
+            <div class="text-right flex-shrink-0">
+              <span class="inline-block px-2 py-0.5 rounded-full text-[11px] font-semibold ${o.cor}">${o.status}</span>
+              <p class="text-xs text-gray-400 mt-0.5">${o.progresso}%</p>
+            </div>
+          </button>
+        `).join('');
+      }
+
+      function perfil_e_configuracoes_renderEquipe(filtro) {
+        const c = document.getElementById('perfil-equipe-lista');
+        const vz = document.getElementById('perfil-equipe-vazia');
+        if (!c) return;
+        const f = (filtro || '').toLowerCase();
+        const itens = perfil_e_configuracoes_equipe.filter(u => u.nome.toLowerCase().includes(f) || u.email.toLowerCase().includes(f) || u.cargo.toLowerCase().includes(f));
+        if (itens.length === 0) { c.innerHTML = ''; if (vz) vz.classList.remove('hidden'); return; }
+        if (vz) vz.classList.add('hidden');
+        c.innerHTML = itens.map(u => { const r = perfil_e_configuracoes_getRoleLabel(u.cargo); return `
+          <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+            <div class="w-10 h-10 rounded-full ${u.cor} flex items-center justify-center text-white text-xs font-bold flex-shrink-0">${u.nome.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase()}</div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-gray-900 truncate">${u.nome}</p>
+              <p class="text-xs text-gray-500 truncate">${u.email}</p>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold ${r.badge} flex-shrink-0">${r.label}</span>
+            <button onclick="perfil_e_configuracoes_abrirModalEditarUsuario(${u.id})" class="p-1.5 rounded-lg hover:bg-gray-200 transition-colors flex-shrink-0" title="Editar permissões">
+              <svg class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+          </div>
+        `; }).join('');
+      }
+
+      function perfil_e_configuracoes_renderCartoes() {
+        const c = document.getElementById('perfil-cartoes-lista');
+        if (!c) return;
+        const bandeiraCores = { Visa: 'from-blue-700 to-blue-900', Mastercard: 'from-gray-700 to-gray-900' };
+        c.innerHTML = perfil_e_configuracoes_cartoes.map(cd => `
+          <div class="flex items-center gap-3 p-3 bg-gradient-to-r ${bandeiraCores[cd.bandeira] || 'from-gray-600 to-gray-800'} rounded-xl text-white">
+            <div class="flex-1">
+              <p class="text-xs text-white/70">${cd.bandeira}</p>
+              <p class="text-sm font-semibold tracking-wider">${cd.final}</p>
+              <p class="text-[11px] text-white/60">Validade ${cd.validade}</p>
+            </div>
+            ${cd.principal ? '<span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-semibold">Principal</span>' : `<button onclick="perfil_e_configuracoes_removerCartao(this)" class="text-white/60 hover:text-white text-xs underline">Remover</button>`}
+          </div>
+        `).join('');
+      }
+
+      function perfil_e_configuracoes_renderHistorico() {
+        const c = document.getElementById('perfil-historico-lista');
+        if (!c) return;
+        c.innerHTML = perfil_e_configuracoes_historico.map(h => `
+          <div class="flex items-center justify-between py-1.5">
+            <div class="min-w-0 flex-1">
+              <p class="text-sm text-gray-700 truncate">${h.desc}</p>
+              <p class="text-[11px] text-gray-400">${h.data}</p>
+            </div>
+            <div class="text-right flex-shrink-0 ml-2">
+              <p class="text-sm font-semibold text-gray-900">${brl(h.valor)}</p>
+              <p class="text-[11px] font-medium ${h.cor}">${h.status}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function perfil_e_configuracoes_renderFAQ() {
+        const c = document.getElementById('perfil-faq-lista');
+        if (!c) return;
+        c.innerHTML = perfil_e_configuracoes_faq.map((f, i) => `
+          <div class="border border-gray-100 rounded-xl overflow-hidden">
+            <button onclick="perfil_e_configuracoes_toggleFAQ(${i})" class="w-full flex items-center justify-between p-3 text-left hover:bg-gray-50 transition-colors">
+              <span class="text-sm font-semibold text-gray-800 pr-4">${f.pergunta}</span>
+              <svg id="perfil-faq-icone-${i}" class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="perfil-faq-resp-${i}" class="hidden px-3 pb-3">
+              <p class="text-sm text-gray-600 leading-relaxed">${f.resposta}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function perfil_e_configuracoes_toggleFAQ(i) {
+        const resp = document.getElementById('perfil-faq-resp-' + i);
+        const icone = document.getElementById('perfil-faq-icone-' + i);
+        if (!resp) return;
+        if (resp.classList.contains('hidden')) { resp.classList.remove('hidden'); icone.style.transform = 'rotate(180deg)'; }
+        else { resp.classList.add('hidden'); icone.style.transform = 'rotate(0deg)'; }
+      }
+
+      function perfil_e_configuracoes_toggleDados() {
+        const f = document.getElementById('perfil-dados-form');
+        if (f) { f.classList.toggle('hidden'); if (!f.classList.contains('hidden')) f.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      }
+      function perfil_e_configuracoes_salvarDados() {
+        const n = document.getElementById('inp-nome'), cp = document.getElementById('inp-cpf'), t = document.getElementById('inp-tel'), e = document.getElementById('inp-end');
+        if (n) perfil_e_configuracoes_dadosUsuario.nome = n.value;
+        if (cp) perfil_e_configuracoes_dadosUsuario.cpf = cp.value;
+        if (t) perfil_e_configuracoes_dadosUsuario.telefone = t.value;
+        if (e) perfil_e_configuracoes_dadosUsuario.endereco = e.value;
+        const f = document.getElementById('perfil-dados-form');
+        if (f) f.classList.add('hidden');
+        toast('Dados atualizados com sucesso', 'ok');
+      }
+      function perfil_e_configuracoes_toggleNotif() { const f = document.getElementById('perfil-notif-form'); if (f) f.classList.toggle('hidden'); }
+      function perfil_e_configuracoes_toggleNotifCanal(el, nome) { toast(nome + (el.checked ? ' ativado' : ' desativado'), 'info'); }
+      function perfil_e_configuracoes_togglePagamentos() { const f = document.getElementById('perfil-pagamentos-form'); if (f) f.classList.toggle('hidden'); }
+      function perfil_e_configuracoes_addCartao() { toast('Redirecionando para o servicede pagamento...', 'info'); }
+      function perfil_e_configuracoes_removerCartao(btn) { btn.closest('.bg-gradient-to-r').remove(); toast('Cartão removido', 'ok'); }
+      function perfil_e_configuracoes_toggleAjuda() { const f = document.getElementById('perfil-ajuda-form'); if (f) f.classList.toggle('hidden'); }
+      function perfil_e_configuracoes_buscarEquipe(v) { perfil_e_configuracoes_renderEquipe(v); }
+      function perfil_e_configuracoes_abrirModalNovoUsuario() {
+        abrirModal(`<div class="space-y-3">
+          <div><label class="block text-xs font-semibold text-gray-600 mb-1">Nome completo</label><input id="modal-nome" type="text" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-marca/20 focus:border-marca outline-none" placeholder="Nome do usuário" /></div>
+          <div><label class="block text-xs font-semibold text-gray-600 mb-1">E-mail</label><input id="modal-email" type="email" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-marca/20 focus:border-marca outline-none" placeholder="email@exemplo.com" /></div>
+          <div><label class="block text-xs font-semibold text-gray-600 mb-1">Perfil</label><select id="modal-perfil" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-marca/20 focus:border-marca outline-none"><option value="cliente">Cliente</option><option value="tecnico">Técnico</option><option value="admin">Administrador</option></select></div>
+          <button onclick="perfil_e_configuracoes_salvarNovoUsuario()" class="w-full bg-marca text-white font-semibold text-sm py-2.5 rounded-xl active:scale-95 transition-all hover:bg-marca-900">Cadastrar usuário</button>
+        </div>`, 'Novo Usuário');
+      }
+      function perfil_e_configuracoes_salvarNovoUsuario() {
+        const n = document.getElementById('modal-nome')?.value?.trim(), e = document.getElementById('modal-email')?.value?.trim(), p = document.getElementById('modal-perfil')?.value;
+        if (!n || !e) { toast('Preencha nome e e-mail', 'erro'); return; }
+        perfil_e_configuracoes_equipe.push({ id: Date.now(), nome: n, cargo: p || 'cliente', email: e, cor: 'bg-gray-400' });
+        perfil_e_configuracoes_renderEquipe(document.getElementById('perfil-busca-equipe')?.value || '');
+        fecharModal();
+        toast('Usuário "' + n + '" cadastrado com sucesso', 'ok');
+      }
+      function perfil_e_configuracoes_abrirModalEditarUsuario(id) {
+        const u = perfil_e_configuracoes_equipe.find(x => x.id === id);
+        if (!u) return;
+        const r = perfil_e_configuracoes_getRoleLabel(u.cargo);
+        abrirModal(`<div class="space-y-3">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-full ${u.cor} flex items-center justify-center text-white font-bold">${u.nome.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase()}</div>
+            <div><p class="font-semibold text-gray-900">${u.nome}</p><p class="text-xs text-gray-500">${u.email}</p></div>
+          </div>
+          <div><label class="block text-xs font-semibold text-gray-600 mb-1">Perfil de acesso</label><select id="modal-edit-perfil" onchange="perfil_e_configuracoes_alterarPermissao(${id},this.value)" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-marca/20 focus:border-marca outline-none"><option value="cliente" ${u.cargo==='cliente'?'selected':''}>Cliente — Acesso a agenda e orçamentos</option><option value="tecnico" ${u.cargo==='tecnico'?'selected':''}>Técnico — Acesso a obras e equipe</option><option value="admin" ${u.cargo==='admin'?'selected':''}>Administrador — Acesso total</option></select></div>
+          <p class="text-xs text-gray-500">A permissão será alterada imediatamente após a confirmação.</p>
+        </div>`, 'Editar Usuário — ' + u.nome);
+      }
+      function perfil_e_configuracoes_alterarPermissao(id, cargo) {
+        const u = perfil_e_configuracoes_equipe.find(x => x.id === id);
+        if (u) { u.cargo = cargo; perfil_e_configuracoes_renderEquipe(document.getElementById('perfil-busca-equipe')?.value || ''); toast('Permissão de ' + u.nome + ' atualizada', 'ok'); }
+      }
+      function perfil_e_configuracoes_confirmarSaida() {
+        abrirModal('<div class="text-center py-4"><svg class="w-12 h-12 text-red-500 mx-auto mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><p class="text-gray-700 font-semibold mb-1">Deseja sair da sua conta?</p><p class="text-sm text-gray-500 mb-4">Você precisará fazer login novamente para acessar o app.</p><div class="flex gap-2"><button onclick="perfil_e_configuracoes_executarSaida()" class="flex-1 bg-red-600 text-white font-semibold text-sm py-2.5 rounded-xl active:scale-95 transition-all">Sair</button><button onclick="fecharModal()" class="flex-1 border border-gray-200 text-gray-600 font-semibold text-sm py-2.5 rounded-xl active:scale-95 transition-all">Cancelar</button></div></div>', 'Confirmar saída');
+      }
+      function perfil_e_configuracoes_executarSaida() { fecharModal(); toast('Você saiu da sua conta', 'info'); }
+
+      (function perfil_e_configuracoes_init() {
+        perfil_e_configuracoes_renderObras();
+        perfil_e_configuracoes_renderEquipe();
+        perfil_e_configuracoes_renderCartoes();
+        perfil_e_configuracoes_renderHistorico();
+        perfil_e_configuracoes_renderFAQ();
+      })();
+      </script>
+    </section>
+
     <!-- TELAS -->
 
   <script>
