@@ -1883,6 +1883,332 @@
   </script>
 </section>
 
+    <section data-tela="chat-com-a-equipe" class="hidden">
+  <div class="chat-com-a_equipe-content">
+    <!-- Cabeçalho do Chat -->
+    <div class="sticky top-0 z-30 bg-white border-b border-gray-100 px-4 py-3">
+      <div class="flex items-center gap-3">
+        <button onclick="mostrarTela('home-do-cliente')" class="p-1 -ml-1 rounded-lg hover:bg-gray-100 transition-colors flex-shrink-0">
+          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <div class="w-10 h-10 rounded-full bg-marca-600 flex items-center justify-center text-white font-display font-bold text-sm flex-shrink-0">RC</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2">
+            <h2 class="font-display font-semibold text-sm text-gray-900 truncate">Ricardo Costa</h2>
+            <span class="w-2 h-2 bg-green-400 rounded-full flex-shrink-0" title="Online"></span>
+          </div>
+          <p class="text-xs text-gray-500 truncate">Técnico de Obras — Obra: Residencial Jardins</p>
+        </div>
+        <button onclick="chat_com_a_equipe_verInfo()" class="p-2 rounded-lg hover:bg-gray-100 transition-colors flex-shrink-0">
+          <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Indicador "digitando..." -->
+    <div id="chat-digitando" class="hidden px-4 pt-2">
+      <div class="flex items-center gap-2 text-xs text-gray-500">
+        <div class="flex gap-1">
+          <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay:0ms"></span>
+          <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay:150ms"></span>
+          <span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay:300ms"></span>
+        </div>
+        <span>Ricardo está digitando...</span>
+      </div>
+    </div>
+
+    <!-- Mensagens -->
+    <div id="chat-mensagens" class="px-4 py-3 space-y-3 overflow-y-auto" style="height: calc(100vh - 220px); scroll-behavior: smooth;">
+    </div>
+
+    <!-- Respostas rápidas -->
+    <div class="px-4 py-2">
+      <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide" style="-webkit-overflow-scrolling: touch;">
+        <button onclick="chat_com_a_equipe_respostaRapida('Preciso de uma visita')" class="flex-shrink-0 px-4 py-2 bg-marca-600 text-white text-xs font-medium rounded-full hover:bg-marca-700 active:scale-95 transition-all shadow-sm">
+          📋 Preciso de uma visita
+        </button>
+        <button onclick="chat_com_a_equipe_respostaRapida('Obra está pronta')" class="flex-shrink-0 px-4 py-2 bg-green-600 text-white text-xs font-medium rounded-full hover:bg-green-700 active:scale-95 transition-all shadow-sm">
+          ✅ Obra está pronta
+        </button>
+        <button onclick="chat_com_a_equipe_respostaRapida('Dúvida sobre o orçamento')" class="flex-shrink-0 px-4 py-2 bg-amber-500 text-white text-xs font-medium rounded-full hover:bg-amber-600 active:scale-95 transition-all shadow-sm">
+          💰 Dúvida sobre o orçamento
+        </button>
+        <button onclick="chat_com_a_equipe_respostaRapida('Preciso aprovar alteração')" class="flex-shrink-0 px-4 py-2 bg-orange-600 text-white text-xs font-medium rounded-full hover:bg-orange-700 active:scale-95 transition-all shadow-sm">
+          🔧 Aprovar alteração
+        </button>
+      </div>
+    </div>
+
+    <!-- Campo de entrada -->
+    <div class="sticky bottom-0 bg-white border-t border-gray-100 px-3 py-2.5">
+      <!-- Sugestões automáticas -->
+      <div id="chat-sugestoes" class="hidden mb-2">
+        <div class="flex flex-wrap gap-1.5">
+          <button onclick="chat_com_a_equipe_usarSugestao(this)" class="sugestao-btn px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full hover:bg-marca-50 hover:text-marca-700 transition-colors">Bom dia! Quais os horários disponíveis?</button>
+          <button onclick="chat_com_a_equipe_usarSugestao(this)" class="sugestao-btn px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full hover:bg-marca-50 hover:text-marca-700 transition-colors">Pode enviar a foto da planta?</button>
+          <button onclick="chat_com_a_equipe_usarSugestao(this)" class="sugestao-btn px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full hover:bg-marca-50 hover:text-marca-700 transition-colors">Preciso do cronograma atualizado</button>
+          <button onclick="chat_com_a_equipe_usarSugestao(this)" class="sugestao-btn px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full hover:bg-marca-50 hover:text-marca-700 transition-colors">Quais materiais estão inclusos?</button>
+        </div>
+      </div>
+      <div class="flex items-end gap-2">
+        <button onclick="document.getElementById('chat-foto-input').click()" class="p-2.5 text-gray-500 hover:text-marca-600 hover:bg-marca-50 rounded-full transition-colors flex-shrink-0" title="Enviar foto">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </button>
+        <input type="file" id="chat-foto-input" accept="image/*" class="hidden" onchange="chat_com_a_equipe_enviarFoto(this)">
+        <div class="flex-1 relative">
+          <textarea id="chat-input" rows="1" placeholder="Digite sua mensagem..." class="w-full resize-none rounded-2xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:border-marca-400 focus:ring-2 focus:ring-marca-100 transition-all max-h-24" oninput="chat_com_a_equipe_onInput(this)" onkeydown="chat_com_a_equipe_onKey(event)"></textarea>
+        </div>
+        <button onclick="chat_com_a_equipe_enviar()" class="p-2.5 bg-marca-600 text-white rounded-full hover:bg-marca-700 active:scale-90 transition-all flex-shrink-0 shadow-sm" title="Enviar">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  const mensagensIniciais = [
+    { tipo: 'recebida', texto: 'Bom dia! Sou o Ricardo, técnico responsável pela sua obra no Residencial Jardins. 😊', hora: '08:15', nome: 'Ricardo Costa' },
+    { tipo: 'enviada', texto: 'Bom dia, Ricardo! Tudo bem? Gostaria de saber como está o andamento da reforma do apartamento.', hora: '08:18', nome: 'Você' },
+    { tipo: 'recebida', texto: 'Tudo ótimo! A obra está dentro do cronograma. Já finalizamos a parte hidráulica e estamos na fase de elétrica. Vou enviar umas fotos para você ver.', hora: '08:20', nome: 'Ricardo Costa' },
+    { tipo: 'recebida', midia: 'foto', descricao: 'Instalação elétrica — sala principal', hora: '08:21', nome: 'Ricardo Costa' },
+    { tipo: 'enviada', texto: 'Ficou muito bom! Quando vem a equipe para o acabamento?', hora: '08:25', nome: 'Você' },
+    { tipo: 'recebida', texto: 'A previsão é começar o gesso e pintura no dia 20 deste mês. Vou agendar uma visita para você aprovar os materiais. Qual dia funciona melhor para você?', hora: '08:28', nome: 'Ricardo Costa' },
+    { tipo: 'sticker', sticker: '📅', hora: '08:28', nome: 'Você' },
+    { tipo: 'enviada', texto: 'Perfeito! Quinta-feira, dia 18, pela manhã funciona para mim.', hora: '08:30', nome: 'Você' },
+    { tipo: 'recebida', texto: 'Confirmado! Quinta, 18, às 09h. Vou enviar uma notificação de confirmação pelo app. Não esqueça de levar o orçamento aprovado para assinarmos o termo de alteração.', hora: '08:32', nome: 'Ricardo Costa' },
+  ];
+
+  window.chat_com_a_equipe_carregar = function() {
+    const container = document.getElementById('chat-mensagens');
+    container.innerHTML = '';
+    mensagensIniciais.forEach(m => chat_com_a_equipe_adicionarMensagem(m, false));
+    chat_com_a_equipe_scrollBottom();
+    setTimeout(() => {
+      document.getElementById('chat-digitando').classList.remove('hidden');
+      setTimeout(() => {
+        document.getElementById('chat-digitando').classList.add('hidden');
+        chat_com_a_equipe_adicionarMensagem({ tipo: 'recebida', texto: '👍 Combinado! Qualquer dúvida é só chamar aqui. Até quinta!', hora: '08:33', nome: 'Ricardo Costa' });
+      }, 2000);
+      }, 3000);
+  };
+
+  window.chat_com_a_equipe_adicionarMensagem = function(m, scroll) {
+    const container = document.getElementById('chat-mensagens');
+    const div = document.createElement('div');
+    div.className = 'chat-msg-item animate-fadeIn';
+
+    if (m.tipo === 'enviada') {
+      div.innerHTML = `
+        <div class="flex justify-end">
+          <div class="max-w-[80%]">
+            <div class="bg-marca-600 text-white px-4 py-2.5 rounded-2xl rounded-br-md shadow-sm">
+              <p class="text-sm leading-relaxed">${m.texto}</p>
+            </div>
+            <p class="text-[10px] text-gray-400 mt-1 text-right pr-1">${m.hora} ✓✓</p>
+          </div>
+        </div>`;
+    } else if (m.tipo === 'recebida') {
+      if (m.midia === 'foto') {
+        div.innerHTML = `
+          <div class="flex gap-2.5">
+            <div class="w-8 h-8 rounded-full bg-marca-600 flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0 mt-1">RC</div>
+            <div class="max-w-[75%]">
+              <p class="text-[10px] text-gray-500 mb-0.5 ml-1">${m.nome}</p>
+              <div class="bg-gray-100 rounded-2xl rounded-tl-md overflow-hidden shadow-sm">
+                <div class="bg-gradient-to-br from-marca-700 to-marca-900 h-40 flex items-center justify-center relative cursor-pointer" onclick="chat_com_a_equipe_verFoto('${m.descricao}')">
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <svg class="w-12 h-12 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                  </div>
+                  <div class="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-[10px] px-3 py-1.5 flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <span class="truncate">${m.descricao}</span>
+                  </div>
+                </div>
+              </div>
+              <p class="text-[10px] text-gray-400 mt-1 ml-1">${m.hora}</p>
+            </div>
+          </div>`;
+      } else if (m.sticker) {
+        div.innerHTML = `
+          <div class="flex justify-end">
+            <div class="max-w-[80%]">
+              <div class="bg-white border border-gray-200 px-4 py-3 rounded-2xl rounded-br-md shadow-sm text-center">
+                <span class="text-3xl">${m.sticker}</span>
+              </div>
+              <p class="text-[10px] text-gray-400 mt-1 text-right pr-1">${m.hora}</p>
+            </div>
+          </div>`;
+      } else {
+        div.innerHTML = `
+          <div class="flex gap-2.5">
+            <div class="w-8 h-8 rounded-full bg-marca-600 flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0 mt-1">RC</div>
+            <div class="max-w-[80%]">
+              <p class="text-[10px] text-gray-500 mb-0.5 ml-1">${m.nome}</p>
+              <div class="bg-gray-100 text-gray-900 px-4 py-2.5 rounded-2xl rounded-tl-md shadow-sm">
+                <p class="text-sm leading-relaxed">${m.texto}</p>
+              </div>
+              <p class="text-[10px] text-gray-400 mt-1 ml-1">${m.hora}</p>
+            </div>
+          </div>`;
+      }
+    }
+
+    container.appendChild(div);
+    if (scroll !== false) chat_com_a_equipe_scrollBottom();
+  };
+
+  window.chat_com_a_equipe_scrollBottom = function() {
+    const container = document.getElementById('chat-mensagens');
+    setTimeout(() => { container.scrollTop = container.scrollHeight; }, 50);
+  };
+
+  window.chat_com_a_equipe_enviar = function() {
+    const input = document.getElementById('chat-input');
+    const texto = input.value.trim();
+    if (!texto) return;
+    const agora = new Date();
+    const hora = agora.getHours().toString().padStart(2,'0') + ':' + agora.getMinutes().toString().padStart(2,'0');
+    chat_com_a_equipe_adicionarMensagem({ tipo: 'enviada', texto, hora, nome: 'Você' });
+    input.value = '';
+    input.style.height = 'auto';
+    document.getElementById('chat-sugestoes').classList.add('hidden');
+    toast('Mensagem enviada', 'ok');
+    // Simula resposta
+    document.getElementById('chat-digitando').classList.remove('hidden');
+    setTimeout(() => {
+      document.getElementById('chat-digitando').classList.add('hidden');
+      chat_com_a_equipe_adicionarMensagem({ tipo: 'recebida', texto: 'Recebi sua mensagem! Vou verificar e retorno em instantes. ⏳', hora: new Date().getHours().toString().padStart(2,'0')+':'+new Date().getMinutes().toString().padStart(2,'0'), nome: 'Ricardo Costa' });
+    }, 2500);
+  };
+
+  window.chat_com_a_equipe_respostaRapida = function(texto) {
+    const agora = new Date();
+    const hora = agora.getHours().toString().padStart(2,'0') + ':' + agora.getMinutes().toString().padStart(2,'0');
+    chat_com_a_equipe_adicionarMensagem({ tipo: 'enviada', texto, hora, nome: 'Você' });
+    toast('Resposta enviada', 'ok');
+    document.getElementById('chat-digitando').classList.remove('hidden');
+    setTimeout(() => {
+      document.getElementById('chat-digitando').classList.add('hidden');
+      const respostas = {
+        'Preciso de uma visita': 'Perfeito! Vou verificar a agenda e te passo os horários disponíveis para esta semana. 📅',
+        'Obra está pronta': 'Que ótima notícia! 🎉 Vou agendar a vistoria final. Você prefere qual dia?',
+        'Dúvida sobre o orçamento': 'Claro! Qual item do orçamento você quer esclarecer? Posso te enviar a planilha atualizada. 📄',
+        'Preciso aprovar alteração': 'Entendi! Vou enviar a solicitação de alteração com o detalhamento dos custos para sua aprovação. ✍️'
+      };
+      chat_com_a_equipe_adicionarMensagem({ tipo: 'recebida', texto: respostas[texto] || 'Entendi! Vou verificar.', hora: new Date().getHours().toString().padStart(2,'0')+':'+new Date().getMinutes().toString().padStart(2,'0'), nome: 'Ricardo Costa' });
+    }, 2000);
+  };
+
+  window.chat_com_a_equipe_enviarFoto = function(input) {
+    if (input.files && input.files[0]) {
+      const agora = new Date();
+      const hora = agora.getHours().toString().padStart(2,'0') + ':' + agora.getMinutes().toString().padStart(2,'0');
+      const nomeArquivo = input.files[0].name;
+      chat_com_a_equipe_adicionarMensagem({ tipo: 'enviada', midia: 'foto-enviada', descricao: nomeArquivo, hora, nome: 'Você' });
+      toast('Foto enviada — salva na galeria da obra', 'ok');
+      document.getElementById('chat-digitando').classList.remove('hidden');
+      setTimeout(() => {
+        document.getElementById('chat-digitando').classList.add('hidden');
+        chat_com_a_equipe_adicionarMensagem({ tipo: 'recebida', texto: '📸 Foto recebida! Já está salva na pasta de documentos da obra. Vou analisar e te dou um retorno.', hora: new Date().getHours().toString().padStart(2,'0')+':'+new Date().getMinutes().toString().padStart(2,'0'), nome: 'Ricardo Costa' });
+      }, 2000);
+      input.value = '';
+    }
+  };
+
+  window.chat_com_a_equipe_onInput = function(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 96) + 'px';
+    const sugestoes = document.getElementById('chat-sugestoes');
+    if (el.value.trim().length > 0) {
+      sugestoes.classList.add('hidden');
+    } else {
+      sugestoes.classList.toggle('hidden', false);
+    }
+  };
+
+  window.chat_com_a_equipe_onKey = function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      chat_com_a_equipe_enviar();
+    }
+  };
+
+  window.chat_com_a_equipe_usarSugestao = function(btn) {
+    const texto = btn.textContent.trim();
+    document.getElementById('chat-input').value = texto;
+    document.getElementById('chat-sugestoes').classList.add('hidden');
+    chat_com_a_equipe_enviar();
+  };
+
+  window.chat_com_a_equipe_verFoto = function(desc) {
+    abrirModal(`
+      <div class="text-center">
+        <div class="bg-gradient-to-br from-marca-700 to-marca-900 rounded-xl h-56 flex items-center justify-center mb-4">
+          <div class="text-white/40">
+            <svg class="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <p class="text-sm font-medium">${desc}</p>
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 mb-3">Enviada por Ricardo Costa — 18/01/2025</p>
+        <div class="flex gap-2 justify-center">
+          <button onclick="mostrarTela('galeria-da-obra'); fecharModal();" class="btn text-sm">Ver na Galeria</button>
+          <button onclick="fecharModal()" class="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors">Fechar</button>
+        </div>
+      </div>
+    `, 'Foto da Obra');
+  };
+
+  window.chat_com_a_equipe_verInfo = function() {
+    abrirModal(`
+      <div class="space-y-4">
+        <div class="flex items-center gap-3 pb-4 border-b border-gray-100">
+          <div class="w-14 h-14 rounded-full bg-marca-600 flex items-center justify-center text-white font-display font-bold text-lg">RC</div>
+          <div>
+            <h3 class="font-display font-semibold text-gray-900">Ricardo Costa</h3>
+            <p class="text-sm text-gray-500">Técnico de Obras Sênior</p>
+            <div class="flex items-center gap-1 mt-1">
+              <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+              <span class="text-xs text-green-600 font-medium">Online</span>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-gray-50 rounded-xl p-3 text-center">
+            <p class="text-2xl font-display font-bold text-marca-600">4.9</p>
+            <p class="text-[10px] text-gray-500 mt-0.5">Avaliação ⭐</p>
+          </div>
+          <div class="bg-gray-50 rounded-xl p-3 text-center">
+            <p class="text-2xl font-display font-bold text-marca-600">127</p>
+            <p class="text-[10px] text-gray-500 mt-0.5">Obras finalizadas</p>
+          </div>
+        </div>
+        <div class="bg-marca-50 rounded-xl p-3">
+          <p class="text-xs font-medium text-marca-800 mb-1">Obra atual:</p>
+          <p class="text-sm text-gray-700">Residencial Jardins — Apt 402</p>
+          <p class="text-xs text-gray-500 mt-0.5">Previsão de conclusão: 15/02/2025</p>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="mostrarTela('galeria-da-obra'); fecharModal();" class="btn flex-1 text-sm text-center">Galeria da Obra</button>
+          <button onclick="fecharModal()" class="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors">Fechar</button>
+        </div>
+      </div>
+    `, 'Informações do Técnico');
+  };
+})();
+</script>
+
+<style>
+.chat-msg-item { animation: msgIn 0.3s ease-out; }
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+
     <!-- TELAS -->
 
   <script>
