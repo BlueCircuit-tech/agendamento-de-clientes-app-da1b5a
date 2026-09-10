@@ -2558,6 +2558,425 @@
       </script>
     </section>
 
+    <section data-tela="painel-administrativo" class="hidden">
+      <div class="fade-in">
+        <header class="mb-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 class="font-display text-2xl font-bold text-gray-900">Painel Administrativo</h1>
+              <p class="text-sm text-gray-500 mt-1">Visão geral da Construtora Silva & Filhos — Abril 2025</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="painel_administrativo_abrirRelatorios()" class="btn flex items-center gap-1.5 text-sm bg-marca-100 text-marca-800 hover:bg-marca-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                Relatórios
+              </button>
+              <button onclick="painel_administrativo_abrirGestaoUsuarios()" class="btn flex items-center gap-1.5 text-sm bg-marca-600 text-white hover:bg-marca-700">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
+                Equipe
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <section class="mb-6">
+          <div class="grid grid-cols-2 gap-3">
+            <div class="card p-4 cursor-pointer transition hover:shadow-lg" onclick="painel_administrativo_detalheKPI('orcamentos')">
+              <div class="flex items-center justify-between mb-2">
+                <div class="w-10 h-10 rounded-lg bg-marca-100 flex items-center justify-center">
+                  <svg class="w-5 h-5 text-marca-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
+                </div>
+                <span class="badge bg-green-100 text-green-700 text-xs">+12%</span>
+              </div>
+              <p class="text-xs text-gray-500 mb-0.5">Orçamentos do Mês</p>
+              <p class="font-display text-xl font-bold text-gray-900">R$ 48.500</p>
+              <p class="text-xs text-gray-400 mt-1">18 solicitações</p>
+            </div>
+            <div class="card p-4 cursor-pointer transition hover:shadow-lg" onclick="painel_administrativo_detalheKPI('aprovacao')">
+              <div class="flex items-center justify-between mb-2">
+                <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                  <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <span class="badge bg-green-100 text-green-700 text-xs">+5%</span>
+              </div>
+              <p class="text-xs text-gray-500 mb-0.5">Taxa de Aprovação</p>
+              <p class="font-display text-xl font-bold text-gray-900">73%</p>
+              <div class="w-full h-1.5 bg-gray-100 rounded-full mt-2"><div class="h-1.5 bg-green-500 rounded-full" style="width:73%"></div></div>
+            </div>
+            <div class="card p-4 cursor-pointer transition hover:shadow-lg" onclick="painel_administrativo_detalheKPI('obras')">
+              <div class="flex items-center justify-between mb-2">
+                <div class="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
+                  <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-5 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                </div>
+                <span class="badge bg-amber-100 text-amber-700 text-xs">3 novas</span>
+              </div>
+              <p class="text-xs text-gray-500 mb-0.5">Obras em Andamento</p>
+              <p class="font-display text-xl font-bold text-gray-900">12</p>
+              <p class="text-xs text-gray-400 mt-1">8 residenciais · 4 comerciais</p>
+            </div>
+            <div class="card p-4 cursor-pointer transition hover:shadow-lg" onclick="painel_administrativo_detalheKPI('receita')">
+              <div class="flex items-center justify-between mb-2">
+                <div class="w-10 h-10 rounded-lg bg-marca-100 flex items-center justify-center">
+                  <svg class="w-5 h-5 text-marca-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <span class="badge bg-green-100 text-green-700 text-xs">+8%</span>
+              </div>
+              <p class="text-xs text-gray-500 mb-0.5">Receita Mensal</p>
+              <p class="font-display text-xl font-bold text-gray-900">R$ 32.000</p>
+              <p class="text-xs text-gray-400 mt-1">Meta: R$ 40.000</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-6">
+          <div class="grid grid-cols-1 gap-3">
+            <div class="card p-4">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="font-display font-semibold text-sm text-gray-800">Orçamentos por Semana</h3>
+                <div class="flex gap-1">
+                  <button onclick="painel_administrativo_mudarPeriodo('semana')" id="btn-periodo-semana" class="text-xs px-2 py-1 rounded bg-marca-600 text-white">Semana</button>
+                  <button onclick="painel_administrativo_mudarPeriodo('mes')" id="btn-periodo-mes" class="text-xs px-2 py-1 rounded bg-gray-100 text-gray-600 hover:bg-gray-200">Mês</button>
+                </div>
+              </div>
+              <svg id="chart-barras" viewBox="0 0 340 160" class="w-full" style="max-height:160px">
+                <defs>
+                  <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#2563EB"/>
+                    <stop offset="100%" stop-color="#1E3A5F"/>
+                  </linearGradient>
+                </defs>
+                <line x1="30" y1="10" x2="30" y2="135" stroke="#E5E7EB" stroke-width="1"/>
+                <line x1="30" y1="135" x2="330" y2="135" stroke="#E5E7EB" stroke-width="1"/>
+                <rect x="42" y="80" width="28" height="55" rx="3" fill="url(#barGrad)" class="transition-all duration-300"/>
+                <text x="56" y="72" text-anchor="middle" fill="#6B7280" font-size="9">R$6,2k</text>
+                <rect x="90" y="55" width="28" height="80" rx="3" fill="url(#barGrad)" class="transition-all duration-300"/>
+                <text x="104" y="47" text-anchor="middle" fill="#6B7280" font-size="9">R$9,8k</text>
+                <rect x="138" y="35" width="28" height="100" rx="3" fill="url(#barGrad)" class="transition-all duration-300"/>
+                <text x="152" y="27" text-anchor="middle" fill="#6B7280" font-size="9">R$13k</text>
+                <rect x="186" y="65" width="28" height="70" rx="3" fill="url(#barGrad)" class="transition-all duration-300"/>
+                <text x="200" y="57" text-anchor="middle" fill="#6B7280" font-size="9">R$8,5k</text>
+                <rect x="234" y="42" width="28" height="93" rx="3" fill="url(#barGrad)" class="transition-all duration-300"/>
+                <text x="248" y="34" text-anchor="middle" fill="#6B7280" font-size="9">R$11k</text>
+                <rect x="282" y="20" width="28" height="115" rx="3" fill="url(#barGrad)" class="transition-all duration-300"/>
+                <text x="296" y="12" text-anchor="middle" fill="#2563EB" font-size="9" font-weight="bold">R$15k</text>
+                <text x="56" y="150" text-anchor="middle" fill="#9CA3AF" font-size="8">Seg</text>
+                <text x="104" y="150" text-anchor="middle" fill="#9CA3AF" font-size="8">Ter</text>
+                <text x="152" y="150" text-anchor="middle" fill="#9CA3AF" font-size="8">Qua</text>
+                <text x="200" y="150" text-anchor="middle" fill="#9CA3AF" font-size="8">Qui</text>
+                <text x="248" y="150" text-anchor="middle" fill="#9CA3AF" font-size="8">Sex</text>
+                <text x="296" y="150" text-anchor="middle" fill="#9CA3AF" font-size="8">Sáb</text>
+              </svg>
+            </div>
+            <div class="card p-4">
+              <h3 class="font-display font-semibold text-sm text-gray-800 mb-3">Tipos de Obra Mais Solicitados</h3>
+              <div class="flex items-center gap-4">
+                <svg viewBox="0 0 120 120" class="w-28 h-28 flex-shrink-0">
+                  <circle cx="60" cy="60" r="44" fill="none" stroke="#F3F4F6" stroke-width="18"/>
+                  <circle cx="60" cy="60" r="44" fill="none" stroke="#2563EB" stroke-width="18" stroke-dasharray="97 175" stroke-dashoffset="0" transform="rotate(-90 60 60)" class="transition-all duration-700"/>
+                  <circle cx="60" cy="60" r="44" fill="none" stroke="#F59E0B" stroke-width="18" stroke-dasharray="53 175" stroke-dashoffset="-97" transform="rotate(-90 60 60)" class="transition-all duration-700"/>
+                  <circle cx="60" cy="60" r="44" fill="none" stroke="#10B981" stroke-width="18" stroke-dasharray="15 175" stroke-dashoffset="-150" transform="rotate(-90 60 60)" class="transition-all duration-700"/>
+                  <circle cx="60" cy="60" r="44" fill="none" stroke="#EF4444" stroke-width="18" stroke-dasharray="10 175" stroke-dashoffset="-165" transform="rotate(-90 60 60)" class="transition-all duration-700"/>
+                  <text x="60" y="56" text-anchor="middle" fill="#1E3A5F" font-size="14" font-weight="bold">55%</text>
+                  <text x="60" y="70" text-anchor="middle" fill="#9CA3AF" font-size="7">residencial</text>
+                </svg>
+                <div class="flex-1 space-y-2">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-marca-500"></span>
+                    <span class="text-xs text-gray-600 flex-1">Residencial</span>
+                    <span class="text-xs font-semibold text-gray-800">55%</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                    <span class="text-xs text-gray-600 flex-1">Comercial</span>
+                    <span class="text-xs font-semibold text-gray-800">30%</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+                    <span class="text-xs text-gray-600 flex-1">Reforma</span>
+                    <span class="text-xs font-semibold text-gray-800">9%</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                    <span class="text-xs text-gray-600 flex-1">Industrial</span>
+                    <span class="text-xs font-semibold text-gray-800">6%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-6">
+          <div class="card p-4">
+            <h3 class="font-display font-semibold text-sm text-gray-800 mb-3">Ações Pendentes</h3>
+            <div class="space-y-2.5">
+              <div class="flex items-center gap-3 p-3 bg-red-50 border border-red-100 rounded-xl cursor-pointer active:scale-[0.98] transition-all" onclick="painel_administrativo_verOrcamentoPendente(1)">
+                <div class="w-8 h-8 rounded-full bg-red-200 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-800 truncate">3 orçamentos aguardando aprovação</p>
+                  <p class="text-xs text-gray-500">Carlos Mendes há 2 dias · Ana Paula há 5h</p>
+                </div>
+                <span class="badge bg-red-100 text-red-700 flex-shrink-0">Urgente</span>
+              </div>
+              <div class="flex items-center gap-3 p-3 bg-amber-50 border border-amber-100 rounded-xl cursor-pointer active:scale-[0.98] transition-all" onclick="painel_administrativo_verVisitasHoje()">
+                <div class="w-8 h-8 rounded-full bg-amber-200 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-800 truncate">2 visitas agendadas para hoje</p>
+                  <p class="text-xs text-gray-500">09:00 — R. das Palmeiras, 45 · 14:00 — Av. Brasil, 1200</p>
+                </div>
+                <span class="badge bg-amber-100 text-amber-700 flex-shrink-0">Hoje</span>
+              </div>
+              <div class="flex items-center gap-3 p-3 bg-blue-50 border border-blue-100 rounded-xl cursor-pointer active:scale-[0.98] transition-all" onclick="painel_administrativo_verMensagensNaoLidas()">
+                <div class="w-8 h-8 rounded-full bg-blue-200 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4 text-marca-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-800 truncate">5 mensagens não lidas no chat</p>
+                  <p class="text-xs text-gray-500">Roberto Lima · Fernanda Costa · João Pedro</p>
+                </div>
+                <span class="badge bg-marca-600 text-white flex-shrink-0">5</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-6">
+          <div class="card p-4">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-display font-semibold text-sm text-gray-800">Equipe</h3>
+              <button onclick="painel_administrativo_abrirGestaoUsuarios()" class="text-xs text-marca-600 hover:text-marca-700 font-medium">Gerenciar →</button>
+            </div>
+            <div class="space-y-2" id="lista-equipe">
+              <div class="flex items-center gap-3 p-2.5 bg-gray-50 rounded-xl" onclick="painel_administrativo_detalheEquipe('roberto')">
+                <div class="w-9 h-9 rounded-full bg-marca-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">RL</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-800">Roberto Lima</p>
+                  <p class="text-xs text-gray-500">Engenheiro Civil</p>
+                </div>
+                <span class="badge bg-green-100 text-green-700 text-xs">Disponível</span>
+                <button onclick="event.stopPropagation(); painel_administrativo_atribuirVisita('roberto')" class="w-7 h-7 rounded-lg bg-marca-600 text-white flex items-center justify-center hover:bg-marca-700 active:scale-90 transition-all flex-shrink-0" title="Atribuir visita">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                </button>
+              </div>
+              <div class="flex items-center gap-3 p-2.5 bg-gray-50 rounded-xl" onclick="painel_administrativo_detalheEquipe('ana')">
+                <div class="w-9 h-9 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">AC</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-800">Ana Carolina Souza</p>
+                  <p class="text-xs text-gray-500">Arquiteta</p>
+                </div>
+                <span class="badge bg-green-100 text-green-700 text-xs">Disponível</span>
+                <button onclick="event.stopPropagation(); painel_administrativo_atribuirVisita('ana')" class="w-7 h-7 rounded-lg bg-marca-600 text-white flex items-center justify-center hover:bg-marca-700 active:scale-90 transition-all flex-shrink-0" title="Atribuir visita">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                </button>
+              </div>
+              <div class="flex items-center gap-3 p-2.5 bg-gray-50 rounded-xl" onclick="painel_administrativo_detalheEquipe('joao')">
+                <div class="w-9 h-9 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">JP</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-800">João Pedro Almeida</p>
+                  <p class="text-xs text-gray-500">Mestre de Obras</p>
+                </div>
+                <span class="badge bg-amber-100 text-amber-700 text-xs">Ocupado</span>
+                <button onclick="event.stopPropagation(); painel_administrativo_atribuirVisita('joao')" class="w-7 h-7 rounded-lg bg-gray-300 text-gray-500 flex items-center justify-center cursor-not-allowed flex-shrink-0" disabled title="Profissional ocupado">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                </button>
+              </div>
+              <div class="flex items-center gap-3 p-2.5 bg-gray-50 rounded-xl" onclick="painel_administrativo_detalheEquipe('mariana')">
+                <div class="w-9 h-9 rounded-full bg-rose-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">MF</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-800">Mariana Ferreira</p>
+                  <p class="text-xs text-gray-500">Designer de Interiores</p>
+                </div>
+                <span class="badge bg-green-100 text-green-700 text-xs">Disponível</span>
+                <button onclick="event.stopPropagation(); painel_administrativo_atribuirVisita('mariana')" class="w-7 h-7 rounded-lg bg-marca-600 text-white flex items-center justify-center hover:bg-marca-700 active:scale-90 transition-all flex-shrink-0" title="Atribuir visita">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                </button>
+              </div>
+              <div class="flex items-center gap-3 p-2.5 bg-gray-50 rounded-xl" onclick="painel_administrativo_detalheEquipe('carlos')">
+                <div class="w-9 h-9 rounded-full bg-indigo-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">CM</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-800">Carlos Eduardo Mendes</p>
+                  <p class="text-xs text-gray-500">Orçamentista</p>
+                </div>
+                <span class="badge bg-red-100 text-red-700 text-xs">Em campo</span>
+                <button onclick="event.stopPropagation(); painel_administrativo_atribuirVisita('carlos')" class="w-7 h-7 rounded-lg bg-gray-300 text-gray-500 flex items-center justify-center cursor-not-allowed flex-shrink-0" disabled title="Profissional em campo">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                </button>
+              </div>
+              <div class="flex items-center gap-3 p-2.5 bg-gray-50 rounded-xl" onclick="painel_administrativo_detalheEquipe('fernanda')">
+                <div class="w-9 h-9 rounded-full bg-teal-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">FS</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-800">Fernanda Santos</p>
+                  <p class="text-xs text-gray-500">Secretária / Atendimento</p>
+                </div>
+                <span class="badge bg-green-100 text-green-700 text-xs">Disponível</span>
+                <button onclick="event.stopPropagation(); painel_administrativo_atribuirVisita('fernanda')" class="w-7 h-7 rounded-lg bg-marca-600 text-white flex items-center justify-center hover:bg-marca-700 active:scale-90 transition-all flex-shrink-0" title="Atribuir visita">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-6">
+          <div class="card p-4">
+            <h3 class="font-display font-semibold text-sm text-gray-800 mb-3">Acesso Rápido</h3>
+            <div class="grid grid-cols-2 gap-2.5">
+              <button onclick="mostrarTela('acompanhar-orcamento')" class="flex items-center gap-3 p-3 bg-marca-50 rounded-xl border border-marca-100 hover:bg-marca-100 active:scale-95 transition-all text-left">
+                <div class="w-9 h-9 rounded-lg bg-marca-600 text-white flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <div><p class="text-sm font-medium text-gray-800">Orçamentos</p><p class="text-xs text-gray-500">18 ativos</p></div>
+              </button>
+              <button onclick="painel_administrativo_verRelatorioFinanceiro()" class="flex items-center gap-3 p-3 bg-green-50 rounded-xl border border-green-100 hover:bg-green-100 active:scale-95 transition-all text-left">
+                <div class="w-9 h-9 rounded-lg bg-green-600 text-white flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div><p class="text-sm font-medium text-gray-800">Financeiro</p><p class="text-xs text-gray-500">Relatórios</p></div>
+              </button>
+              <button onclick="painel_administrativo_abrirGestaoUsuarios()" class="flex items-center gap-3 p-3 bg-amber-50 rounded-xl border border-amber-100 hover:bg-amber-100 active:scale-95 transition-all text-left">
+                <div class="w-9 h-9 rounded-lg bg-amber-600 text-white flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
+                </div>
+                <div><p class="text-sm font-medium text-gray-800">Usuários</p><p class="text-xs text-gray-500">6 membros</p></div>
+              </button>
+              <button onclick="mostrarTela('minha-agenda')" class="flex items-center gap-3 p-3 bg-purple-50 rounded-xl border border-purple-100 hover:bg-purple-100 active:scale-95 transition-all text-left">
+                <div class="w-9 h-9 rounded-lg bg-purple-600 text-white flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </div>
+                <div><p class="text-sm font-medium text-gray-800">Agenda</p><p class="text-xs text-gray-500">2 visitas hoje</p></div>
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <script>
+      (function(){
+        const equipe = {
+          roberto: { nome:'Roberto Lima', funcao:'Engenheiro Civil', status:'Disponível', cor:'#2563EB', iniciais:'RL', projetos:3, avaliacoes:4.9 },
+          ana: { nome:'Ana Carolina Souza', funcao:'Arquiteta', status:'Disponível', cor:'#F59E0B', iniciais:'AC', projetos:2, avaliacoes:5.0 },
+          joao: { nome:'João Pedro Almeida', funcao:'Mestre de Obras', status:'Ocupado', cor:'#10B981', iniciais:'JP', projetos:5, avaliacoes:4.7 },
+          mariana: { nome:'Mariana Ferreira', funcao:'Designer de Interiores', status:'Disponível', cor:'#F43F5E', iniciais:'MF', projetos:4, avaliacoes:4.8 },
+          carlos: { nome:'Carlos Eduardo Mendes', funcao:'Orçamentista', status:'Em campo', cor:'#6366F1', iniciais:'CM', projetos:6, avaliacoes:4.6 },
+          fernanda: { nome:'Fernanda Santos', funcao:'Secretária / Atendimento', status:'Disponível', cor:'#14B8A6', iniciais:'FS', projetos:1, avaliacoes:4.9 }
+        };
+
+        function painel_administrativo_detalheKPI(tipo) {
+          const dados = {
+            orcamentos: '<p class="font-display text-lg font-bold text-gray-900 mb-2">Orçamentos do Mês — R$ 48.500</p><p class="text-sm text-gray-600 mb-3">Total de 18 orçamentos solicitados, sendo 13 aprovados (73%). Valor médio por orçamento: R$ 2.694.</p><div class="space-y-1.5"><div class="flex justify-between text-sm"><span class="text-gray-500">Residencial</span><span class="font-semibold">R$ 28.200 (58%)</span></div><div class="flex justify-between text-sm"><span class="text-gray-500">Comercial</span><span class="font-semibold">R$ 14.640 (30%)</span></div><div class="flex justify-between text-sm"><span class="text-gray-500">Reforma</span><span class="font-semibold">R$ 4.370 (9%)</span></div><div class="flex justify-between text-sm"><span class="text-gray-500">Industrial</span><span class="font-semibold">R$ 1.290 (3%)</span></div></div>',
+            aprovacao: '<p class="font-display text-lg font-bold text-gray-900 mb-2">Taxa de Aprovação — 73%</p><p class="text-sm text-gray-600 mb-3">5 orçamentos aguardando resposta do cliente. Taxa aumentou 5% em relação ao mês anterior.</p><div class="flex gap-4"><div class="text-center"><p class="text-2xl font-bold text-green-600">13</p><p class="text-xs text-gray-500">Aprovados</p></div><div class="text-center"><p class="text-2xl font-bold text-red-500">3</p><p class="text-xs text-gray-500">Recusados</p></div><div class="text-center"><p class="text-2xl font-bold text-amber-500">2</p><p class="text-xs text-gray-500">Pendentes</p></div></div>',
+            obras: '<p class="font-display text-lg font-bold text-gray-900 mb-2">12 Obras em Andamento</p><p class="text-sm text-gray-600 mb-3">8 residenciais · 4 comerciais · 3 novas este mês</p><div class="space-y-1.5"><div class="flex justify-between text-sm"><span class="text-gray-500">Concluídas este mês</span><span class="font-semibold text-green-600">2</span></div><div class="flex justify-between text-sm"><span class="text-gray-500">Em andamento</span><span class="font-semibold text-amber-600">12</span></div><div class="flex justify-between text-sm"><span class="text-gray-500">Aguardando início</span><span class="font-semibold text-marca-600">4</span></div></div>',
+            receita: '<p class="font-display text-lg font-bold text-gray-900 mb-2">Receita Mensal — R$ 32.000</p><p class="text-sm text-gray-600 mb-3">Meta: R$ 40.000 (80% atingido). Prevemos R$ 38.000 no fechamento.</p><div class="flex gap-4"><div class="text-center"><p class="text-2xl font-bold text-green-600">R$ 32k</p><p class="text-xs text-gray-500">Recebido</p></div><div class="text-center"><p class="text-2xl font-bold text-amber-500">R$ 8k</p><p class="text-xs text-gray-500">A receber</p></div></div>'
+          };
+          abrirModal(dados[tipo], 'Detalhe do Indicador');
+        }
+
+        function painel_administrativo_mudarPeriodo(p) {
+          const barGrad = 'url(#barGrad)';
+          const chart = document.getElementById('chart-barras');
+          const btnSemana = document.getElementById('btn-periodo-semana');
+          const btnMes = document.getElementById('btn-periodo-mes');
+          if(p === 'semana') {
+            btnSemana.className = 'text-xs px-2 py-1 rounded bg-marca-600 text-white';
+            btnMes.className = 'text-xs px-2 py-1 rounded bg-gray-100 text-gray-600 hover:bg-gray-200';
+            chart.innerHTML = '<defs><linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#1E3A5F"/></linearGradient></defs><line x1="30" y1="10" x2="30" y2="135" stroke="#E5E7EB" stroke-width="1"/><line x1="30" y1="135" x2="330" y2="135" stroke="#E5E7EB" stroke-width="1"/><rect x="42" y="80" width="28" height="55" rx="3" fill="url(#barGrad)"/><text x="56" y="72" text-anchor="middle" fill="#6B7280" font-size="9">R$6,2k</text><rect x="90" y="55" width="28" height="80" rx="3" fill="url(#barGrad)"/><text x="104" y="47" text-anchor="middle" fill="#6B7280" font-size="9">R$9,8k</text><rect x="138" y="35" width="28" height="100" rx="3" fill="url(#barGrad)"/><text x="152" y="27" text-anchor="middle" fill="#6B7280" font-size="9">R$13k</text><rect x="186" y="65" width="28" height="70" rx="3" fill="url(#barGrad)"/><text x="200" y="57" text-anchor="middle" fill="#6B7280" font-size="9">R$8,5k</text><rect x="234" y="42" width="28" height="93" rx="3" fill="url(#barGrad)"/><text x="248" y="34" text-anchor="middle" fill="#6B7280" font-size="9">R$11k</text><rect x="282" y="20" width="28" height="115" rx="3" fill="url(#barGrad)"/><text x="296" y="12" text-anchor="middle" fill="#2563EB" font-size="9" font-weight="bold">R$15k</text><text x="56" y="150" text-anchor="middle" fill="#9CA3AF" font-size="8">Seg</text><text x="104" y="150" text-anchor="middle" fill="#9CA3AF" font-size="8">Ter</text><text x="152" y="150" text-anchor="middle" fill="#9CA3AF" font-size="8">Qua</text><text x="200" y="150" text-anchor="middle" fill="#9CA3AF" font-size="8">Qui</text><text x="248" y="150" text-anchor="middle" fill="#9CA3AF" font-size="8">Sex</text><text x="296" y="150" text-anchor="middle" fill="#9CA3AF" font-size="8">Sáb</text>';
+          } else {
+            btnSemana.className = 'text-xs px-2 py-1 rounded bg-gray-100 text-gray-600 hover:bg-gray-200';
+            btnMes.className = 'text-xs px-2 py-1 rounded bg-marca-600 text-white';
+            chart.innerHTML = '<defs><linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#1E3A5F"/></linearGradient></defs><line x1="30" y1="10" x2="30" y2="135" stroke="#E5E7EB" stroke-width="1"/><line x1="30" y1="135" x2="330" y2="135" stroke="#E5E7EB" stroke-width="1"/><rect x="50" y="60" width="38" height="75" rx="3" fill="url(#barGrad)"/><text x="69" y="52" text-anchor="middle" fill="#6B7280" font-size="9">R$32k</text><rect x="112" y="75" width="38" height="60" rx="3" fill="url(#barGrad)"/><text x="131" y="67" text-anchor="middle" fill="#6B7280" font-size="9">R$26k</text><rect x="174" y="25" width="38" height="110" rx="3" fill="url(#barGrad)"/><text x="193" y="17" text-anchor="middle" fill="#2563EB" font-size="9" font-weight="bold">R$48k</text><rect x="236" y="45" width="38" height="90" rx="3" fill="url(#barGrad)"/><text x="255" y="37" text-anchor="middle" fill="#6B7280" font-size="9">R$38k</text><text x="69" y="150" text-anchor="middle" fill="#9CA3AF" font-size="8">Jan</text><text x="131" y="150" text-anchor="middle" fill="#9CA3AF" font-size="8">Fev</text><text x="193" y="150" text-anchor="middle" fill="#9CA3AF" font-size="8">Mar</text><text x="255" y="150" text-anchor="middle" fill="#9CA3AF" font-size="8">Abr</text>';
+          }
+          toast('Gráfico atualizado', 'ok');
+        }
+
+        function painel_administrativo_verOrcamentoPendente(idx) {
+          const orcamentos = [
+            '<p class="font-display font-semibold text-gray-900 mb-1">Orçamento #047 — Carlos Mendes</p><p class="text-sm text-gray-600">Solicitação de ampliação residencial. Valor estimado: R$ 45.000. Aguardando aprovação há 2 dias.</p><div class="flex gap-2 mt-3"><button onclick="painel_administrativo_aprovarOrcamento(' + idx + ')" class="btn bg-green-600 text-white text-sm px-4 py-2 active:scale-95">Aprovar</button><button onclick="painel_administrativo_recusarOrcamento(' + idx + ')" class="btn bg-red-600 text-white text-sm px-4 py-2 active:scale-95">Recusar</button></div>',
+            '<p class="font-display font-semibold text-gray-900 mb-1">Orçamento #048 — Ana Paula Rocha</p><p class="text-sm text-gray-600">Reforma de fachada comercial. Valor estimado: R$ 28.500. Aguardando aprovação há 1 dia.</p><div class="flex gap-2 mt-3"><button onclick="painel_administrativo_aprovarOrcamento(' + idx + ')" class="btn bg-green-600 text-white text-sm px-4 py-2 active:scale-95">Aprovar</button><button onclick="painel_administrativo_recusarOrcamento(' + idx + ')" class="btn bg-red-600 text-white text-sm px-4 py-2 active:scale-95">Recusar</button></div>',
+            '<p class="font-display font-semibold text-gray-900 mb-1">Orçamento #049 — Fernanda Costa</p><p class="text-sm text-gray-600">Construção de casa térrea. Valor estimado: R$ 320.000. Aguardando aprovação há 5 horas.</p><div class="flex gap-2 mt-3"><button onclick="painel_administrativo_aprovarOrcamento(' + idx + ')" class="btn bg-green-600 text-white text-sm px-4 py-2 active:scale-95">Aprovar</button><button onclick="painel_administrativo_recusarOrcamento(' + idx + ')" class="btn bg-red-600 text-white text-sm px-4 py-2 active:scale-95">Recusar</button></div>'
+          ];
+          abrirModal(orcamentos[idx - 1], 'Orçamento Pendente');
+        }
+
+        function painel_administrativo_aprovarOrcamento(idx) {
+          fecharModal();
+          toast('Orçamento aprovado! Notificação enviada por WhatsApp.', 'ok');
+        }
+        function painel_administrativo_recusarOrcamento(idx) {
+          fecharModal();
+          toast('Orçamento recusado. Cliente será notificado.', 'info');
+        }
+
+        function painel_administrativo_verVisitasHoje() {
+          abrirModal('<p class="font-display font-semibold text-gray-900 mb-3">Visitas de Hoje — 22/04/2025</p><div class="space-y-3"><div class="p-3 bg-gray-50 rounded-xl"><p class="text-sm font-medium text-gray-800">09:00 — R. das Palmeiras, 45</p><p class="text-xs text-gray-500">Visita técnica · Cliente: Roberto Lima</p><p class="text-xs text-marca-600 mt-1">Profissional: Ana Carolina</p></div><div class="p-3 bg-gray-50 rounded-xl"><p class="text-sm font-medium text-gray-800">14:00 — Av. Brasil, 1200</p><p class="text-xs text-gray-500">Apresentação de projeto · Cliente: Carlos Mendes</p><p class="text-xs text-marca-600 mt-1">Profissional: Roberto Lima</p></div></div>', 'Visitas de Hoje');
+        }
+
+        function painel_administrativo_verMensagensNaoLidas() {
+          mostrarTela('chat-com-a-equipe');
+        }
+
+        function painel_administrativo_detalheEquipe(id) {
+          const m = equipe[id];
+          abrirModal('<div class="text-center mb-4"><div class="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-xl font-bold text-white" style="background-color:' + m.cor + '">' + m.iniciais + '</div><p class="font-display font-semibold text-gray-900 mt-2">' + m.nome + '</p><p class="text-sm text-gray-500">' + m.funcao + '</p><span class="badge ' + (m.status==='Disponível'?'bg-green-100 text-green-700':m.status==='Ocupado'?'bg-amber-100 text-amber-700':'bg-red-100 text-red-700') + ' mt-1">' + m.status + '</span></div><div class="grid grid-cols-2 gap-3 mb-4"><div class="text-center p-3 bg-gray-50 rounded-xl"><p class="text-lg font-bold text-gray-900">' + m.projetos + '</p><p class="text-xs text-gray-500">Projetos ativos</p></div><div class="text-center p-3 bg-gray-50 rounded-xl"><p class="text-lg font-bold text-gray-900">' + m.avaliacoes + ' ★</p><p class="text-xs text-gray-500">Avaliação</p></div></div><div class="flex gap-2"><button onclick="painel_administrativo_enviarMensagem(\'' + id + '\')" class="btn flex-1 bg-marca-600 text-white text-sm py-2.5 active:scale-95">Enviar Mensagem</button><button onclick="painel_administrativo_verAgendaProfissional(\'' + id + '\')" class="btn flex-1 bg-gray-100 text-gray-700 text-sm py-2.5 active:scale-95">Ver Agenda</button></div>', 'Detalhe do Profissional');
+        }
+
+        function painel_administrativo_enviarMensagem(id) {
+          fecharModal();
+          mostrarTela('chat-com-a-equipe');
+        }
+        function painel_administrativo_verAgendaProfissional(id) {
+          fecharModal();
+          mostrarTela('minha-agenda');
+        }
+
+        function painel_administrativo_atribuirVisita(id) {
+          const m = equipe[id];
+          if(m.status !== 'Disponível') {
+            toast(m.nome + ' está ' + m.status.toLowerCase() + ' e não pode receber novas visitas.', 'erro');
+            return;
+          }
+          abrirModal('<p class="text-sm text-gray-600 mb-3">Atribuir nova visita para <strong>' + m.nome + '</strong> (' + m.funcao + ')</p><div class="space-y-3"><div><label class="text-xs text-gray-500 block mb-1">Cliente</label><input type="text" placeholder="Nome do cliente" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-marca-500 focus:border-marca-500 outline-none" id="attr-cliente"></div><div><label class="text-xs text-gray-500 block mb-1">Data</label><input type="date" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-marca-500 focus:border-marca-500 outline-none" id="attr-data"></div><div><label class="text-xs text-gray-500 block mb-1">Horário</label><select class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-marca-500 focus:border-marca-500 outline-none" id="attr-hora"><option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option></select></div><div><label class="text-xs text-gray-500 block mb-1">Endereço</label><input type="text" placeholder="Rua, número, bairro" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-marca-500 focus:border-marca-500 outline-none" id="attr-endereco"></div><div><label class="text-xs text-gray-500 block mb-1">Observações</label><textarea placeholder="Detalhes da visita..." rows="2" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-marca-500 focus:border-marca-500 outline-none resize-none" id="attr-obs"></textarea></div></div><button onclick="painel_administrativo_confirmarAtribuicao()" class="btn w-full bg-marca-600 text-white text-sm py-2.5 mt-3 active:scale-95">Confirmar Atribuição</button>', 'Atribuir Visita — ' + m.nome);
+        }
+
+        function painel_administrativo_confirmarAtribuicao() {
+          const cliente = document.getElementById('attr-cliente').value;
+          const data = document.getElementById('attr-data').value;
+          if(!cliente || !data) {
+            toast('Preencha o nome do cliente e a data.', 'erro');
+            return;
+          }
+          fecharModal();
+          toast('Visita atribuída! Notificação enviada por WhatsApp.', 'ok');
+        }
+
+        function painel_administrativo_abrirRelatorios() {
+          abrirModal('<p class="text-sm text-gray-600 mb-3">Selecione o relatório desejado:</p><div class="space-y-2"><button onclick="painel_administrativo_verRelatorio('financeiro')" class="w-full text-left p-3 bg-gray-50 rounded-xl hover:bg-gray-100 active:scale-[0.98] transition-all"><p class="text-sm font-medium text-gray-800">Relatório Financeiro</p><p class="text-xs text-gray-500">Receitas, despesas e fluxo de caixa</p></button><button onclick="painel_administrativo_verRelatorio('vendas')" class="w-full text-left p-3 bg-gray-50 rounded-xl hover:bg-gray-100 active:scale-[0.98] transition-all"><p class="text-sm font-medium text-gray-800">Relatório de Vendas</p><p class="text-xs text-gray-500">Orçamentos, conversões e ticket médio</p></button><button onclick="painel_administrativo_verRelatorio('equipe')" class="w-full text-left p-3 bg-gray-50 rounded-xl hover:bg-gray-100 active:scale-[0.98] transition-all"><p class="text-sm font-medium text-gray-800">Desempenho da Equipe</p><p class="text-xs text-gray-500">Produtividade e satisfação</p></button><button onclick="painel_administrativo_verRelatorio('obras')" class="w-full text-left p-3 bg-gray-50 rounded-xl hover:bg-gray-100 active:scale-[0.98] transition-all"><p class="text-sm font-medium text-gray-800">Relatório de Obras</p><p class="text-xs text-gray-500">Status, prazos e andamento</p></button></div>', 'Relatórios');
+        }
+
+        function painel_administrativo_verRelatorio(tipo) {
+          const nomes = { financeiro:'Financeiro', vendas:'Vendas', equipe:'Desempenho da Equipe', obras:'Obras' };
+          fecharModal();
+          toast('Relatório de ' + nomes[tipo] + ' gerado! Em breve disponível para download.', 'ok');
+        }
+
+        function painel_administrativo_verRelatorioFinanceiro() {
+          abrirModal('<p class="font-display font-semibold text-gray-900 mb-2">Relatório Financeiro — Abril 2025</p><p class="text-sm text-gray-600 mb-3">Resumo do mês atual:</p><div class="space-y-2 mb-4"><div class="flex justify-between p-2 bg-green-50 rounded-lg"><span class="text-sm text-gray-600">Receita Total</span><span class="text-sm font-bold text-green-700">R$ 48.500</span></div><div class="flex justify-between p-2 bg-red-50 rounded-lg"><span class="text-sm text-gray-600">Despesas</span><span class="text-sm font-bold text-red-700">R$ 16.500</span></div><div class="flex justify-between p-2 bg-marca-50 rounded-lg"><span class="text-sm text-gray-600">Lucro Líquido</span><span class="text-sm font-bold text-marca-700">R$ 32.000</span></div></div><div class="flex gap-2"><button onclick="toast(\'PDF gerado com sucesso!\',\'ok\'); fecharModal();" class="btn flex-1 bg-marca-600 text-white text-sm py-2 active:scale-95">Baixar PDF</button><button onclick="fecharModal();" class="btn flex-1 bg-gray-100 text-gray-700 text-sm py-2 active:scale-95">Fechar</button></div>', 'Relatório Financeiro');
+        }
+
+        function painel_administrativo_abrirGestaoUsuarios() {
+          abrirModal('<p class="font-display font-semibold text-gray-900 mb-3">Gestão de Usuários</p><div class="space-y-2 mb-4"><div class="flex items-center justify-between p-2.5 bg-gray-50 rounded-xl"><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-marca-600 text-white flex items-center justify-center text-xs font-bold">RL</div><div><p class="text-sm font-medium text-gray-800">Roberto Lima</p><p class="text-xs text-gray-500">Admin</p></div></div><span class="badge bg-green-100 text-green-700 text-xs">Ativo</span></div><div class="flex items-center justify-between p-2.5 bg-gray-50 rounded-xl"><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs font-bold">AC</div><div><p class="text-sm font-medium text-gray-800">Ana Carolina</p><p class="text-xs text-gray-500">Arquituta</p></div></div><span class="badge bg-green-100 text-green-700 text-xs">Ativo</span></div><div class="flex items-center justify-between p-2.5 bg-gray-50 rounded-xl"><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold">JP</div><div><p class="text-sm font-medium text-gray-800">João Pedro</p><p class="text-xs text-gray-500">Mestre de Obras</p></div></div><span class="badge bg-green-100 text-green-700 text-xs">Ativo</span></div></div><button onclick="painel_administrativo_adicionarUsuario(); fecharModal();" class="btn w-full bg-marca-600 text-white text-sm py-2.5 active:scale-95">+ Adicionar Novo Usuário</button>', 'Gestão de Usuários');
+        }
+
+        function painel_administrativo_adicionarUsuario() {
+          toast('Funcionalidade de cadastro de usuário em desenvolvimento.', 'info');
+        }
+      })();
+      </script>
+    </section>
+
     <!-- TELAS -->
 
   <script>
