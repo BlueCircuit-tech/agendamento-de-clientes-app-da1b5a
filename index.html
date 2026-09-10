@@ -2977,6 +2977,266 @@
       </script>
     </section>
 
+    <section data-tela="galeria-da-obra" class="hidden">
+  <div class="px-5 pt-2 pb-1">
+    <div class="relative">
+      <select id="galeria-obra" onchange="galeria_da_obra_mudarObra(this.value)" class="w-full appearance-none bg-white border border-gray-200 rounded-xl px-4 py-3 pr-10 text-base font-body font-semibold text-marca-900 cursor-pointer shadow-sm transition-colors focus:border-marca-500 focus:ring-2 focus:ring-marca-200 outline-none">
+        <option value="obra1">Residência Jardim América — Rua das Acácias, 142</option>
+        <option value="obra2">Edifício Comercial Centro — Av. Brasil, 580</option>
+        <option value="obra3">Reforma Apartamento Vila Nova — Rua São Paulo, 89</option>
+      </select>
+      <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-between px-5 pt-2 pb-1">
+    <div>
+      <h1 class="text-xl font-display font-bold text-marca-900">Galeria da Obra</h1>
+      <p class="text-sm text-gray-500 mt-0.5 font-body">Fotos, documentos e arquivos do projeto</p>
+    </div>
+    <button onclick="galeria_da_obra_abrirCamera()" class="flex items-center gap-2 bg-marca-500 hover:bg-marca-600 active:scale-95 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-marca-500/20 transition-all font-body">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      <span>Nova Foto</span>
+    </button>
+  </div>
+
+  <div class="px-5 pt-3 pb-2">
+    <div class="bg-gray-100 rounded-xl p-1 flex gap-1 overflow-x-auto" id="galeria-abas">
+      <button onclick="galeria_da_obra_mudarAba('fotos')" data-aba="fotos" class="galeria-aba-btn active-aba flex-1 min-w-fit py-2 px-3 rounded-lg text-sm font-semibold font-body transition-all whitespace-nowrap">Fotos do Local</button>
+      <button onclick="galeria_da_obra_mudarAba('plantas')" data-aba="plantas" class="galeria-aba-btn flex-1 min-w-fit py-2 px-3 rounded-lg text-sm font-semibold font-body transition-all whitespace-nowrap">Plantas</button>
+      <button onclick="galeria_da_obra_mudarAba('contratos')" data-aba="contratos" class="galeria-aba-btn flex-1 min-w-fit py-2 px-3 rounded-lg text-sm font-semibold font-body transition-all whitespace-nowrap">Contratos</button>
+      <button onclick="galeria_da_obra_mudarAba('comprovantes')" data-aba="comprovantes" class="galeria-aba-btn flex-1 min-w-fit py-2 px-3 rounded-lg text-sm font-semibold font-body transition-all whitespace-nowrap">Comprovantes</button>
+      <button onclick="galeria_da_obra_mudarAba('progresso')" data-aba="progresso" class="galeria-aba-btn flex-1 min-w-fit py-2 px-3 rounded-lg text-sm font-semibold font-body transition-all whitespace-nowrap">Progresso</button>
+    </div>
+  </div>
+
+  <div class="px-5 pb-6">
+    <div class="relative mb-4">
+      <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input type="text" id="galeria-busca" oninput="galeria_da_obra_buscar(this.value)" placeholder="Buscar arquivos..." class="w-full bg-white border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-sm font-body text-gray-700 placeholder-gray-400 shadow-sm focus:border-marca-500 focus:ring-2 focus:ring-marca-200 outline-none transition-colors">
+    </div>
+    <div id="galeria-lista" class="grid grid-cols-2 gap-3"></div>
+    <div id="galeria-vazio" class="hidden text-center py-12">
+      <svg class="w-16 h-16 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      <p class="text-gray-500 text-sm font-body">Nenhum arquivo encontrado</p>
+    </div>
+  </div>
+
+  <div id="galeria-modal-overlay" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onclick="if(event.target===this)galeria_da_obra_fecharModal()">
+    <div class="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl" id="galeria-modal-conteudo"></div>
+  </div>
+
+  <div id="galeria-camera-overlay" class="hidden fixed inset-0 bg-black z-50 flex flex-col">
+    <div class="flex items-center justify-between px-4 py-3">
+      <button onclick="galeria_da_obra_fecharCamera()" class="text-white/80 hover:text-white p-2"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+      <span class="text-white font-display font-semibold">Nova Foto</span>
+      <button onclick="galeria_da_obra_capturar()" class="bg-white text-marca-900 px-4 py-1.5 rounded-full text-sm font-bold font-body">Capturar</button>
+    </div>
+    <div class="flex-1 flex items-center justify-center bg-gray-900">
+      <div class="text-center">
+        <svg class="w-20 h-20 text-white/30 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <p class="text-white/50 text-sm font-body">Visualização da câmera</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  const galeria_dados = {
+    fotos: [
+      {id:'f1',nome:'Fachada frontal — vista geral',data:'2025-01-15',enviadoPor:'Carlos Mendes',cor:'from-blue-100 to-sky-100',icone:'M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z M15 13a3 3 0 11-6 0 3 3 0 016 0z',tipo:'foto'},
+      {id:'f2',nome:'Área de jardim — lateral esquerda',data:'2025-01-15',enviadoPor:'Ana Beatriz',cor:'from-green-100 to-emerald-100',icone:'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z',tipo:'foto'},
+      {id:'f3',nome:'Garagem — vista interna',data:'2025-01-14',enviadoPor:'Carlos Mendes',cor:'from-gray-100 to-slate-200',icone:'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4',tipo:'foto'},
+      {id:'f4',nome:'Cozinha — espaço original',data:'2025-01-14',enviadoPor:'Ana Beatriz',cor:'from-orange-100 to-amber-100',icone:'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',tipo:'foto'},
+      {id:'f5',nome:'Banheiro social — existente',data:'2025-01-13',enviadoPor:'Ricardo Souza',cor:'from-teal-100 to-cyan-100',icone:'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',tipo:'foto'},
+      {id:'f6',nome:'Quintal — vista superior drone',data:'2025-01-13',enviadoPor:'Carlos Mendes',cor:'from-indigo-100 to-purple-100',icone:'M12 19l9 2-9-18-9 18 9-2zm0 0v-8',tipo:'foto'},
+      {id:'f7',nome:'Sala de estar — estado atual',data:'2025-01-12',enviadoPor:'Ana Beatriz',cor:'from-yellow-100 to-orange-100',icone:'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',tipo:'foto'},
+      {id:'f8',nome:'Área de serviço — fundos',data:'2025-01-12',enviadoPor:'Ricardo Souza',cor:'from-rose-100 to-pink-100',icone:'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',tipo:'foto'},
+    ],
+    plantas: [
+      {id:'p1',nome:'Planta baixa — térreo.pdf',data:'2025-01-10',enviadoPor:'Arq. Fernanda Lima',cor:'from-sky-100 to-blue-100',icone:'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',tipo:'pdf'},
+      {id:'p2',nome:'Planta baixa — superior.pdf',data:'2025-01-10',enviadoPor:'Arq. Fernanda Lima',cor:'from-sky-100 to-blue-100',icone:'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',tipo:'pdf'},
+      {id:'p3',nome:'Cortes A-A e B-B.pdf',data:'2025-01-09',enviadoPor:'Eng. Paulo Ribeiro',cor:'from-sky-100 to-blue-100',icone:'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',tipo:'pdf'},
+      {id:'p4',nome:'Detalhe da cobertura.pdf',data:'2025-01-09',enviadoPor:'Arq. Fernanda Lima',cor:'from-sky-100 to-blue-100',icone:'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',tipo:'pdf'},
+      {id:'p5',nome:'Memorial descritivo.pdf',data:'2025-01-08',enviadoPor:'Arq. Fernanda Lima',cor:'from-sky-100 to-blue-100',icone:'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',tipo:'pdf'},
+      {id:'p6',nome:'Instalações hidráulicas.pdf',data:'2025-01-08',enviadoPor:'Eng. Paulo Ribeiro',cor:'from-sky-100 to-blue-100',icone:'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',tipo:'pdf'},
+    ],
+    contratos: [
+      {id:'c1',nome:'Contrato Social — Reforma Completa.pdf',data:'2025-01-10',enviadoPor:'Adm. BlueCircuit',cor:'from-emerald-100 to-green-100',icone:'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',tipo:'pdf',assinado:true,assinadoPor:'Roberto Almeida',dataAssinatura:'2025-01-10'},
+      {id:'c2',nome:'Termo de Recebimento de Obra.pdf',data:'2025-01-10',enviadoPor:'Adm. BlueCircuit',cor:'from-emerald-100 to-green-100',icone:'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',tipo:'pdf',assinado:true,assinadoPor:'Roberto Almeida',dataAssinatura:'2025-01-10'},
+      {id:'c3',nome:'Contrato de Fornecimento — Mármore São Gabriel.pdf',data:'2025-01-08',enviadoPor:'Adm. BlueCircuit',cor:'from-emerald-100 to-green-100',icone:'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',tipo:'pdf',assinado:true,assinadoPor:'Roberto Almeida',dataAssinatura:'2025-01-08'},
+      {id:'c4',nome:'Autorização de Construção — Prefeitura.pdf',data:'2025-01-05',enviadoPor:'Arq. Fernanda Lima',cor:'from-emerald-100 to-green-100',icone:'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',tipo:'pdf',assinado:true,assinadoPor:'Prefeitura Municipal',dataAssinatura:'2024-12-20'},
+      {id:'c5',nome:'Aditivo Contratual — Acréscimo Área Gourmet.pdf',data:'2025-01-12',enviadoPor:'Adm. BlueCircuit',cor:'from-yellow-100 to-amber-100',icone:'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',tipo:'pdf',assinado:false},
+    ],
+    comprovantes: [
+      {id:'cv1',nome:'Pagamento — Medição 1 (Fundações)',data:'2025-01-14',enviadoPor:'Adm. BlueCircuit',cor:'from-lime-100 to-green-100',icone:'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z',tipo:'comprovante',valor:47850.00},
+      {id:'cv2',nome:'Pagamento — Medição 2 (Estrutura)',data:'2025-01-14',enviadoPor:'Adm. BlueCircuit',cor:'from-lime-100 to-green-100',icone:'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z',tipo:'comprovante',valor:89200.00},
+      {id:'cv3',nome:'Pagamento Fornecedor — Cimento & Argamassa',data:'2025-01-13',enviadoPor:'Ricardo Souza',cor:'from-lime-100 to-green-100',icone:'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z',tipo:'comprovante',valor:8430.50},
+      {id:'cv4',nome:'Pagamento Fornecedor — Ferragens',data:'2025-01-12',enviadoPor:'Ricardo Souza',cor:'from-lime-100 to-green-100',icone:'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z',tipo:'comprovante',valor:12100.00},
+      {id:'cv5',nome:'Pagamento — Medição 3 (Alvenaria)',data:'2025-01-11',enviadoPor:'Adm. BlueCircuit',cor:'from-lime-100 to-green-100',icone:'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z',tipo:'comprovante',valor:63500.00},
+      {id:'cv6',nome:'Pagamento IPTU — Exercício 2025',data:'2025-01-07',enviadoPor:'Adm. BlueCircuit',cor:'from-lime-100 to-green-100',icone:'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z',tipo:'comprovante',valor:2180.00},
+    ],
+    progresso: [
+      {id:'pr1',nome:'15/01 — Fundação concluída',data:'2025-01-15',enviadoPor:'Carlos Mendes',cor:'from-emerald-100 to-teal-100',icone:'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',tipo:'foto',etapa:'Fundação'},
+      {id:'pr2',nome:'15/01 — Concretagem da laje térrea',data:'2025-01-15',enviadoPor:'Carlos Mendes',cor:'from-emerald-100 to-teal-100',icone:'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',tipo:'foto',etapa:'Estrutura'},
+      {id:'pr3',nome:'14/01 — Escavação finalizada',data:'2025-01-14',enviadoPor:'Ricardo Souza',cor:'from-blue-100 to-indigo-100',icone:'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',tipo:'foto',etapa:'Escavação'},
+      {id:'pr4',nome:'13/01 — Armadura da laje montada',data:'2025-01-13',enviadoPor:'Carlos Mendes',cor:'from-blue-100 to-indigo-100',icone:'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',tipo:'foto',etapa:'Estrutura'},
+      {id:'pr5',nome:'12/01 — Formas da laje instaladas',data:'2025-01-12',enviadoPor:'Ricardo Souza',cor:'from-amber-100 to-yellow-100',icone:'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',tipo:'foto',etapa:'Estrutura'},
+      {id:'pr6',nome:'11/01 — Limpeza do terreno concluída',data:'2025-01-11',enviadoPor:'Carlos Mendes',cor:'from-amber-100 to-yellow-100',icone:'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',tipo:'foto',etapa:'Preparação'},
+      {id:'pr7',nome:'10/01 — Estacas hélice contínua',data:'2025-01-10',enviadoPor:'Eng. Paulo Ribeiro',cor:'from-amber-100 to-yellow-100',icone:'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',tipo:'foto',etapa:'Fundação'},
+      {id:'pr8',nome:'09/01 — Início da escavação',data:'2025-01-09',enviadoPor:'Ricardo Souza',cor:'from-orange-100 to-red-100',icone:'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',tipo:'foto',etapa:'Escavação'},
+    ]
+  };
+
+  const iconesMap = {
+    'M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z M15 13a3 3 0 11-6 0 3 3 0 016 0z':'camera',
+    'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z':'estrela',
+    'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z':'pdf',
+    'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z':'dinheiro',
+    'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z':'check',
+    'M12 19l9 2-9-18-9 18 9-2zm0 0v-8':'drone',
+    'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z':'foto',
+    'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4':'garagem'
+  };
+
+  const tipoExt = {pdf:'PDF',foto:'JPG',comprovante:'PDF'};
+  const tipoCor = {pdf:'text-red-500',foto:'text-blue-500',comprovante:'text-green-600'};
+  const tipoBg = {pdf:'bg-red-50',foto:'bg-blue-50',comprovante:'bg-green-50'};
+
+  let abaAtual = 'fotos';
+  let termoBusca = '';
+
+  function galeria_da_obra_inicializar(){
+    galeria_da_obra_renderizar();
+  }
+
+  function galeria_da_obra_mudarAba(aba){
+    abaAtual = aba;
+    document.querySelectorAll('.galeria-aba-btn').forEach(b=>{
+      b.classList.remove('bg-marca-500','text-white','shadow-sm');
+      b.classList.add('text-gray-600','hover:text-marca-600');
+    });
+    const ativo = document.querySelector(`.galeria-aba-btn[data-aba="${aba}"]`);
+    ativo.classList.add('bg-marca-500','text-white','shadow-sm');
+    ativo.classList.remove('text-gray-600','hover:text-marca-600');
+    galeria_da_obra_renderizar();
+  }
+
+  function galeria_da_obra_buscar(termo){
+    termoBusca = termo.toLowerCase().trim();
+    galeria_da_obra_renderizar();
+  }
+
+  function galeria_da_obra_mudarObra(obraId){
+    toast('Obra alterada com sucesso','ok');
+    galeria_da_obra_renderizar();
+  }
+
+  function galeria_da_obra_abrirCamera(){
+    document.getElementById('galeria-camera-overlay').classList.remove('hidden');
+  }
+  function galeria_da_obra_fecharCamera(){
+    document.getElementById('galeria-camera-overlay').classList.add('hidden');
+  }
+  function galeria_da_obra_capturar(){
+    galeria_da_obra_fecharCamera();
+    toast('Foto capturada e enviada para a obra','ok');
+  }
+
+  function galeria_da_obra_abrirItem(item){
+    const ehContrato = item.assinado !== undefined;
+    const ehComprovante = item.valor !== undefined;
+    const temEtapa = item.etapa !== undefined;
+
+    let corpo = '';
+    corpo += `<div class="bg-gradient-to-br ${item.cor} h-48 flex items-center justify-center relative">`;
+    corpo += `  <svg class="w-16 h-16 text-marca-800/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="${item.icone}"/></svg>`;
+    corpo += `  <span class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-semibold text-marca-900 px-2 py-1 rounded-md font-body">${tipoExt[item.tipo]}</span>`;
+    if(item.assinado){
+      corpo += `  <div class="absolute top-3 right-3 bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-md"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>Assinado</div>`;
+    }
+    corpo += `</div>`;
+    corpo += `<div class="p-5">`;
+    corpo += `  <h3 class="font-display font-bold text-lg text-marca-900 mb-1">${item.nome}</h3>`;
+    corpo += `  <div class="flex items-center gap-2 text-sm text-gray-500 mb-4 font-body">`;
+    corpo += `    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>`;
+    corpo += `    <span>Enviado em ${dataBR(item.data)}</span>`;
+    corpo += `  </div>`;
+    if(ehContrato && item.assinado){
+      corpo += `  <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-4">`;
+      corpo += `    <div class="flex items-center gap-2 mb-1">`;
+      corpo += `      <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>`;
+      corpo += `      <span class="text-sm font-bold text-emerald-800 font-body">Assinatura Digital</span>`;
+      corpo += `    </div>`;
+      corpo += `    <p class="text-xs text-emerald-700 font-body">Assinado por <strong>${item.assinadoPor}</strong> em ${dataBR(item.dataAssinatura)}</p>`;
+      corpo += `  </div>`;
+    }
+    if(ehComprovante){
+      corpo += `  <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-4">`;
+      corpo += `    <p class="text-xs text-green-600 font-body mb-1">Valor do comprovante</p>`;
+      corpo += `    <p class="text-2xl font-display font-bold text-green-800">R$ ${brl(item.valor)}</p>`;
+      corpo += `  </div>`;
+    }
+    if(temEtapa){
+      corpo += `  <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-4">`;
+      corpo += `    <span class="text-xs font-semibold text-blue-700 font-body">Etapa: ${item.etapa}</span>`;
+      corpo += `  </div>`;
+    }
+    corpo += `  <div class="flex items-center gap-2 text-sm text-gray-500 mb-5 font-body"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>Enviado por ${item.enviadoPor}</div>`;
+    corpo += `  <div class="flex gap-2">`;
+    corpo += `    <button onclick="toast('Arquivo enviado para download','ok');galeria_da_obra_fecharModal()" class="flex-1 bg-marca-500 hover:bg-marca-600 text-white py-3 rounded-xl text-sm font-bold font-body active:scale-95 transition-all">Baixar</button>`;
+    corpo += `    <button onclick="toast('Link de compartilhamento copiado','ok');galeria_da_obra_fecharModal()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-marca-900 py-3 rounded-xl text-sm font-bold font-body active:scale-95 transition-all">Compartilhar</button>`;
+    corpo += `  </div>`;
+    corpo += `</div>`;
+
+    abrirModal(corpo, 'Detalhes do Arquivo');
+  }
+
+  function galeria_da_obra_fecharModal(){
+    document.getElementById('galeria-modal-overlay').classList.add('hidden');
+    document.getElementById('galeria-modal-conteudo').innerHTML = '';
+  }
+
+  function galeria_da_obra_renderizar(){
+    const lista = document.getElementById('galeria-lista');
+    const vazio = document.getElementById('galeria-vazio');
+    let itens = galeria_dados[abaAtual] || [];
+    if(termoBusca){
+      itens = itens.filter(it=>it.nome.toLowerCase().includes(termoBusca)||it.enviadoPor.toLowerCase().includes(termoBusca));
+    }
+    if(itens.length===0){
+      lista.innerHTML='';
+      vazio.classList.remove('hidden');
+      return;
+    }
+    vazio.classList.add('hidden');
+    lista.innerHTML = itens.map(item=>{
+      const inicial = item.enviadoPor.split(' ').map(p=>p[0]).slice(0,2).join('');
+      return `<div onclick="galeria_da_obra_abrirItem(galeria_dados['${abaAtual}'].find(i=>i.id==='${item.id}'))" class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 cursor-pointer active:scale-[0.97] transition-all hover:shadow-md group">
+        <div class="bg-gradient-to-br ${item.cor} h-28 flex items-center justify-center relative">
+          <svg class="w-8 h-8 text-marca-900/25 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="${item.icone}"/></svg>
+          ${item.assinado!==false&&item.assinado===true?`<div class="absolute top-2 right-2 bg-emerald-500 text-white w-5 h-5 rounded-full flex items-center justify-center"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>`:''}
+          ${item.valor!==undefined?`<div class="absolute top-2 right-2 ${tipoBg[item.tipo]} ${tipoCor[item.tipo]} text-xs font-bold px-2 py-0.5 rounded-md font-body">Pago</div>`:''}
+          <span class="absolute bottom-2 left-2 bg-black/40 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded font-body">${tipoExt[item.tipo]}</span>
+        </div>
+        <div class="p-3">
+          <p class="text-xs font-semibold text-marca-900 font-body leading-tight mb-1 line-clamp-2">${item.nome}</p>
+          <p class="text-[11px] text-gray-400 font-body mb-2">${dataBR(item.data)}</p>
+          <div class="flex items-center gap-1.5">
+            <div class="w-5 h-5 rounded-full bg-marca-100 flex items-center justify-center text-[10px] font-bold text-marca-700 font-body">${inicial}</div>
+            <span class="text-[11px] text-gray-500 font-body truncate">${item.enviadoPor}</span>
+          </div>
+          ${item.assinado===false?`<span class="inline-block mt-2 text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full font-body">Pendente de assinatura</span>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  galeria_da_obra_inicializar();
+})();
+</script>
+
     <!-- TELAS -->
 
   <script>
