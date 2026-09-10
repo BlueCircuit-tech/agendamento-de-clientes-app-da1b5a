@@ -1072,6 +1072,367 @@
   </script>
 </section>
 
+    <section data-tela="minha-agenda" class="hidden">
+      <div id="ma-header" class="px-5 pt-5 pb-3">
+        <div class="flex items-center justify-between mb-1">
+          <div>
+            <h1 class="font-display text-2xl font-bold text-marca-900">Minha Agenda</h1>
+            <p class="text-sm text-marca-500 mt-0.5" id="ma-subtitle">Visitas e compromissos</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="ma_toggleFiltros()" class="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center active:scale-95 transition-all shadow-sm">
+              <svg class="w-5 h-5 text-marca-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div id="ma-filtros" class="hidden mt-3 flex gap-2 overflow-x-auto pb-1 -mx-5 px-5 scrollbar-hide">
+          <button onclick="ma_filtrar('todos')" class="ma-filtro-btn active-filtro whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold border transition-all" data-filtro="todos">Todos</button>
+          <button onclick="ma_filtrar('visita')" class="ma-filtro-btn whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold border transition-all" data-filtro="visita">Visita Técnica</button>
+          <button onclick="ma_filtrar('orcamento')" class="ma-filtro-btn whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold border transition-all" data-filtro="orcamento">Orçamento</button>
+          <button onclick="ma_filtrar('obra')" class="ma-filtro-btn whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold border transition-all" data-filtro="obra">Obra</button>
+        </div>
+      </div>
+
+      <div class="px-5 mb-4">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="flex items-center justify-between px-4 pt-4 pb-2">
+            <button onclick="ma_mesAnterior()" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 active:scale-90 transition-all">
+              <svg class="w-4 h-4 text-marca-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <span id="ma-mes-label" class="font-display font-bold text-marca-900 text-base"></span>
+            <button onclick="ma_proximoMes()" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 active:scale-90 transition-all">
+              <svg class="w-4 h-4 text-marca-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+          <div class="grid grid-cols-7 mb-1">
+            <div class="text-center text-[10px] font-semibold text-marca-400 py-1">DOM</div>
+            <div class="text-center text-[10px] font-semibold text-marca-400 py-1">SEG</div>
+            <div class="text-center text-[10px] font-semibold text-marca-400 py-1">TER</div>
+            <div class="text-center text-[10px] font-semibold text-marca-400 py-1">QUA</div>
+            <div class="text-center text-[10px] font-semibold text-marca-400 py-1">QUI</div>
+            <div class="text-center text-[10px] font-semibold text-marca-400 py-1">SEX</div>
+            <div class="text-center text-[10px] font-semibold text-marca-400 py-1">SÁB</div>
+          </div>
+          <div id="ma-calendario" class="grid grid-cols-7 gap-px px-2 pb-3"></div>
+          <div class="flex items-center justify-center gap-4 px-4 pb-3 pt-1 border-t border-gray-50">
+            <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span><span class="text-[10px] text-marca-500">Visita</span></div>
+            <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span class="text-[10px] text-marca-500">Orçamento</span></div>
+            <div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span><span class="text-[10px] text-marca-500">Obra</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-5 pb-24">
+        <div class="flex items-center justify-between mb-3">
+          <h2 id="ma-data-label" class="font-display font-bold text-marca-900 text-base"></h2>
+          <span id="ma-qtd-compromissos" class="text-xs text-marca-400"></span>
+        </div>
+        <div id="ma-lista-compromissos"></div>
+        <div id="ma-vazio" class="hidden text-center py-12">
+          <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-gray-50 flex items-center justify-center">
+            <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+          <p class="text-sm text-marca-400">Nenhum compromisso neste dia</p>
+          <button onclick="ma_abrirNovoAgendamento()" class="mt-3 text-sm font-semibold text-marca-600 hover:text-marca-700 transition-colors">+ Agendar visita</button>
+        </div>
+      </div>
+
+      <button onclick="ma_abrirNovoAgendamento()" class="fixed bottom-6 right-6 z-40 w-14 h-14 bg-marca-600 rounded-full shadow-lg shadow-marca-600/30 flex items-center justify-center active:scale-90 transition-all hover:bg-marca-700">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+      </button>
+
+      <div id="ma-swipe-actions" class="fixed inset-0 z-50 hidden">
+        <div onclick="ma_fecharSwipe()" class="absolute inset-0 bg-black/20 backdrop-blur-sm transition-opacity"></div>
+        <div id="ma-swipe-panel" class="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl transform translate-y-full transition-transform duration-300 ease-out max-h-[60vh] overflow-y-auto">
+          <div class="w-10 h-1 bg-gray-300 rounded-full mx-auto mt-3 mb-4"></div>
+          <div id="ma-swipe-content" class="px-5 pb-6"></div>
+        </div>
+      </div>
+
+      <script>
+      function ma_getEventos() {
+        return JSON.parse(localStorage.getItem('ma_eventos') || 'null') || ma_eventosPadrao();
+      }
+      function ma_salvarEventos(e) { localStorage.setItem('ma_eventos', JSON.stringify(e)); }
+      function ma_eventosPadrao() {
+        const hoje = new Date();
+        const d = (offset) => { const dt = new Date(hoje); dt.setDate(dt.getDate()+offset); return dt.toISOString().slice(0,10); };
+        return [
+          { id: 1, titulo: 'Visita Técnica - Residencial Jardins', tipo: 'visita', data: d(0), hora: '08:30', duracao: 90, tecnico: 'Carlos Eduardo', endereco: 'Rua das Acácias, 245 - Jardins', cliente: 'Roberto Almeida', contato: '(11) 99876-5432', status: 'confirmado', obs: 'Cliente quer ampliar a área de convívio. Levar amostras de porcelanato.', valor: 0 },
+          { id: 2, titulo: 'Orçamento Reforma Cozinha', tipo: 'orcamento', data: d(0), hora: '14:00', duracao: 60, tecnico: 'Fernanda Lima', endereco: 'Av. Paulista, 1020 - Bela Vista', cliente: 'Mariana Costa', contato: '(11) 98765-4321', status: 'pendente', obs: 'Reforma completa: piso, azulejo, bancada e pintura.', valor: 28500 },
+          { id: 3, titulo: 'Início Obra - Edifício Solar', tipo: 'obra', data: d(1), hora: '07:00', duracao: 480, tecnico: 'Antonio Ferreira', endereco: 'Rua Bahia, 88 - Centro', cliente: 'Construtora Horizonte', contato: '(11) 97654-3210', status: 'confirmado', obs: 'Obra de 12 andares. Equipe de 8 pessoas.', valor: 450000 },
+          { id: 4, titulo: 'Visita Técnica - Casa térrea', tipo: 'visita', data: d(1), hora: '10:00', duracao: 60, tecnico: 'Carlos Eduardo', endereco: 'Rua das Palmeiras, 55 - Vila Olímpia', cliente: 'Patrícia Moura', contato: '(11) 96543-2109', status: 'pendente', obs: 'Levantamento para projeto de ampliação.', valor: 0 },
+          { id: 5, titulo: 'Entrega Orçamento - Comercial', tipo: 'orcamento', data: d(2), hora: '15:30', duracao: 45, tecnico: 'Fernanda Lima', endereco: 'Rua Augusta, 1500 - Consolação', cliente: 'Diego Martins', contato: '(11) 95432-1098', status: 'pendente', obs: 'Orçamento de reforma de fachada comercial.', valor: 67800 },
+          { id: 6, titulo: 'Vistoria Obra Finalizada', tipo: 'obra', data: d(3), hora: '09:00', duracao: 120, tecnico: 'Roberto Silva', endereco: 'Rua Itu, 320 - Jardins', cliente: 'Família Nakamura', contato: '(11) 94321-0987', status: 'confirmado', obs: 'Vistoria final para entrega da reforma de apartamento.', valor: 0 },
+          { id: 7, titulo: 'Visita Técnica - Sobrado Novo', tipo: 'visita', data: d(4), hora: '08:00', duracao: 90, tecnico: 'Carlos Eduardo', endereco: 'Rua Jequitibás, 70 - Alto de Pinheiros', cliente: 'Luciano Barros', contato: '(11) 93210-9876', status: 'pendente', obs: 'Lote de 300m². Cliente quer sobrado 3 quartos + escritório.', valor: 0 },
+          { id: 8, titulo: 'Assinatura Contrato - Reforma', tipo: 'orcamento', data: d(5), hora: '11:00', duracao: 30, tecnico: 'Fernanda Lima', endereco: 'Escritório Central - Av. Rebouças, 500', cliente: 'Mariana Costa', contato: '(11) 98765-4321', status: 'confirmado', obs: 'Contrato de reforma de cozinha aprovado.', valor: 28500 },
+          { id: 9, titulo: 'Acompanhamento Obra - Etapa 3', tipo: 'obra', data: d(7), hora: '08:30', duracao: 120, tecnico: 'Antonio Ferreira', endereco: 'Rua Bahia, 88 - Centro', cliente: 'Construtora Horizonte', contato: '(11) 97654-3210', status: 'confirmado', obs: 'Verificar andamento da estrutura do 4º andar.', valor: 0 },
+          { id: 10, titulo: 'Visita Técnica - Comercial', tipo: 'visita', data: d(8), hora: '14:00', duracao: 60, tecnico: 'Roberto Silva', endereco: 'Rua Oscar Freire, 200 - Jardins', cliente: 'Boutique Elegance', contato: '(11) 92109-8765', status: 'pendente', obs: 'Reforma de loja. Necessário estudo de luminotécnica.', valor: 0 },
+        ];
+      }
+      let ma_mesAtual = new Date().getMonth();
+      let ma_anoAtual = new Date().getFullYear();
+      let ma_diaSelecionado = new Date().toISOString().slice(0,10);
+      let ma_filtroAtivo = 'todos';
+
+      function ma_init() {
+        const stored = ma_getEventos();
+        if (!stored.length) { ma_salvarEventos(ma_eventosPadrao()); }
+        ma_renderCalendario();
+        ma_renderCompromissos();
+        ma_aplicarFiltros();
+        ma_setupPullToRefresh();
+      }
+
+      function ma_mesAnterior() { ma_mesAtual--; if(ma_mesAtual<0){ma_mesAtual=11;ma_anoAtual--;} ma_renderCalendario(); }
+      function ma_proximoMes() { ma_mesAtual++; if(ma_mesAtual>11){ma_mesAtual=0;ma_anoAtual++;} ma_renderCalendario(); }
+
+      function ma_renderCalendario() {
+        const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+        document.getElementById('ma-mes-label').textContent = `${meses[ma_mesAtual]} ${ma_anoAtual}`;
+        const container = document.getElementById('ma-calendario');
+        container.innerHTML = '';
+        const primeiro = new Date(ma_anoAtual, ma_mesAtual, 1);
+        const ultimo = new Date(ma_anoAtual, ma_mesAtual+1, 0);
+        const inicioSemana = primeiro.getDay();
+        const eventos = ma_getEventos();
+        const hoje = new Date().toISOString().slice(0,10);
+        const hojeMes = new Date().getMonth()===ma_mesAtual && new Date().getFullYear()===ma_anoAtual;
+        const hojeDia = hojeMes ? new Date().getDate() : -1;
+        for (let i = 0; i < inicioSemana; i++) { const c = document.createElement('div'); container.appendChild(c); }
+        for (let dia = 1; dia <= ultimo.getDate(); dia++) {
+          const dataStr = `${ma_anoAtual}-${String(ma_mesAtual+1).padStart(2,'0')}-${String(dia).padStart(2,'0')}`;
+          const evDia = eventos.filter(e => e.data === dataStr);
+          const isSelecionado = dataStr === ma_diaSelecionado;
+          const isHoje = dia === hojeDia;
+          const btn = document.createElement('button');
+          let dotHtml = '';
+          if (evDia.length) {
+            const tipos = [...new Set(evDia.map(e=>e.tipo))];
+            dotHtml = '<div class="flex gap-0.5 justify-center mt-0.5">';
+            tipos.forEach(t => { const c = t==='visita'?'bg-blue-500':t==='orcamento'?'bg-emerald-500':'bg-amber-500'; dotHtml += `<span class="w-1.5 h-1.5 rounded-full ${c}"></span>`; });
+            dotHtml += '</div>';
+          }
+          const bgClass = isSelecionado ? 'bg-marca-600 text-white shadow-md' : isHoje ? 'bg-marca-50 text-marca-900 ring-2 ring-marca-600' : 'text-marca-700 hover:bg-gray-50';
+          const txtDot = isSelecionado ? 'text-white/80' : 'text-marca-400';
+          btn.className = `w-full aspect-square rounded-xl flex flex-col items-center justify-center text-sm font-semibold transition-all active:scale-90 ${bgClass}`;
+          btn.innerHTML = `<span>${dia}</span>${dotHtml ? dotHtml : `<div class="mt-0.5 ${txtDot}"><span class="text-[8px]">·</span></div>` : ''}`;
+          btn.onclick = () => { ma_diaSelecionado = dataStr; ma_renderCalendario(); ma_renderCompromissos(); };
+          container.appendChild(btn);
+        }
+      }
+
+      function ma_renderCompromissos() {
+        const eventos = ma_getEventos().filter(e => e.data === ma_diaSelecionado && (ma_filtroAtivo==='todos' || e.tipo === ma_filtroAtivo));
+        const label = document.getElementById('ma-data-label');
+        const dataObj = new Date(ma_diaSelecionado+'T12:00:00');
+        const hoje = new Date().toISOString().slice(0,10);
+        label.textContent = dataObj.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
+        document.getElementById('ma-qtd-compromissos').textContent = `${eventos.length} compromisso${eventos.length!==1?'s':''}`;
+        const container = document.getElementById('ma-lista-compromissos');
+        const vazio = document.getElementById('ma-vazio');
+        if (!eventos.length) { container.innerHTML=''; vazio.classList.remove('hidden'); return; }
+        vazio.classList.add('hidden');
+        container.innerHTML = eventos.map(ev => {
+          const statusConfig = {
+            confirmado: { bg:'bg-emerald-50', border:'border-emerald-200', text:'text-emerald-700', badge:'bg-emerald-100 text-emerald-700', icon:'<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>' },
+            pendente: { bg:'bg-amber-50', border:'border-amber-200', text:'text-amber-700', badge:'bg-amber-100 text-amber-700', icon:'<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/><path stroke-linecap="round" stroke-width="2.5" d="M12 8v4l2.5 2.5"/></svg>' },
+            concluido: { bg:'bg-gray-50', border:'border-gray-200', text:'text-gray-500', badge:'bg-gray-100 text-gray-600', icon:'<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>' }
+          };
+          const s = statusConfig[ev.status];
+          const tipoIcon = ev.tipo==='visita'?'<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>':ev.tipo==='orcamento'?'<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>':'<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>';
+          const tipoLabel = ev.tipo==='visita'?'Visita Técnica':ev.tipo==='orcamento'?'Orçamento':'Obra';
+          const tipoColor = ev.tipo==='visita'?'text-blue-600 bg-blue-50':ev.tipo==='orcamento'?'text-emerald-600 bg-emerald-50':'text-amber-600 bg-amber-50';
+          return `<div class="card mb-3 p-4 ${s.bg} border ${s.border} cursor-pointer hover:shadow-md transition-all active:scale-[0.98]" ontouchstart="ma_swipeStart(event,${ev.id})" ontouchmove="ma_swipeMove(event)" ontouchend="ma_swipeEnd(event,${ev.id})" onclick="ma_abrirDetalhe(${ev.id})">
+            <div class="flex items-start justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ${tipoColor}">${tipoIcon}${tipoLabel}</span>
+              </div>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ${s.badge}">${s.icon}${ev.status==='confirmado'?'Confirmado':ev.status==='pendente'?'Pendente':'Concluído'}</span>
+            </div>
+            <h3 class="font-display font-bold text-marca-900 text-sm mb-1 leading-tight">${ev.titulo}</h3>
+            <div class="flex items-center gap-3 text-xs text-marca-500 mb-2">
+              <span class="flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>${ev.hora} · ${ev.duracao}min</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs text-marca-500">
+              <div class="flex items-center gap-1.5">
+                <div class="w-5 h-5 rounded-full bg-marca-200 flex items-center justify-center"><span class="text-[9px] font-bold text-marca-700">${ev.tecnico.split(' ').map(n=>n[0]).join('').slice(0,2)}</span></div>
+                <span>${ev.tecnico}</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-1 mt-2 text-xs text-marca-400">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              <span class="truncate">${ev.endereco}</span>
+            </div>
+            ${ev.valor > 0 ? `<div class="mt-2 text-xs font-semibold text-marca-700">${brl(ev.valor)}</div>` : ''}
+          </div>`;
+        }).join('');
+      }
+
+      function ma_filtrar(filtro) {
+        ma_filtroAtivo = filtro;
+        document.querySelectorAll('.ma-filtro-btn').forEach(b => {
+          const isActive = b.dataset.filtro === filtro;
+          b.className = `ma-filtro-btn whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold border transition-all ${isActive ? 'bg-marca-600 text-white border-marca-600 shadow-sm' : 'bg-white text-marca-500 border-gray-200'}`;
+        });
+        ma_renderCompromissos();
+      }
+      function ma_toggleFiltros() { const el = document.getElementById('ma-filtros'); el.classList.toggle('hidden'); }
+      function ma_aplicarFiltros() { ma_filtrar(ma_filtroAtivo); }
+
+      function ma_abrirDetalhe(id) {
+        const ev = ma_getEventos().find(e => e.id === id);
+        if (!ev) return;
+        const statusLabel = ev.status==='confirmado'?'Confirmado':ev.status==='pendente'?'Pendente':'Concluído';
+        const statusBadge = ev.status==='confirmado'?'bg-emerald-100 text-emerald-700':ev.status==='pendente'?'bg-amber-100 text-amber-700':'bg-gray-100 text-gray-600';
+        const html = `<div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="px-3 py-1 rounded-full text-xs font-semibold ${statusBadge}">${statusLabel}</span>
+            ${ev.valor > 0 ? `<span class="font-display font-bold text-lg text-marca-900">${brl(ev.valor)}</span>` : ''}
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-marca-900 text-lg">${ev.titulo}</h3>
+            <p class="text-sm text-marca-500 mt-1">${ev.obs || 'Sem observações'}</p>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-start gap-3">
+              <div class="w-9 h-9 rounded-xl bg-marca-50 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-marca-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+              <div><p class="text-xs text-marca-400">Data e horário</p><p class="text-sm font-medium text-marca-900">${dataBR(ev.data)} às ${ev.hora} · ${ev.duracao} min</p></div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="w-9 h-9 rounded-xl bg-marca-50 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-marca-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
+              <div><p class="text-xs text-marca-400">Responsável</p><p class="text-sm font-medium text-marca-900">${ev.tecnico}</p></div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="w-9 h-9 rounded-xl bg-marca-50 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-marca-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
+              <div><p class="text-xs text-marca-400">Cliente</p><p class="text-sm font-medium text-marca-900">${ev.cliente}</p><p class="text-xs text-marca-400">${ev.contato}</p></div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="w-9 h-9 rounded-xl bg-marca-50 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-marca-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+              <div><p class="text-xs text-marca-400">Endereço</p><p class="text-sm font-medium text-marca-900">${ev.endereco}</p></div>
+            </div>
+          </div>
+          <div class="flex gap-2 pt-2">
+            <button onclick="ma_verRota('${ev.endereco}'); fecharModal();" class="btn flex-1 text-center text-sm">Ver Rota</button>
+            ${ev.status==='pendente' ? `<button onclick="ma_confirmarCompromisso(${ev.id}); fecharModal();" class="btn flex-1 text-center text-sm">Confirmar</button>` : ''}
+            ${ev.status!=='concluido' ? `<button onclick="ma_concluirCompromisso(${ev.id}); fecharModal();" class="btn flex-1 text-center text-sm">Concluir</button>` : ''}
+          </div>
+        </div>`;
+        abrirModal(html, 'Detalhes do Compromisso');
+      }
+
+      function ma_confirmarCompromisso(id) {
+        const evs = ma_getEventos();
+        const ev = evs.find(e=>e.id===id);
+        if (ev) { ev.status = 'confirmado'; ma_salvarEventos(evs); ma_renderCompromissos(); toast('Compromisso confirmado com sucesso!','ok'); }
+      }
+      function ma_concluirCompromisso(id) {
+        const evs = ma_getEventos();
+        const ev = evs.find(e=>e.id===id);
+        if (ev) { ev.status = 'concluido'; ma_salvarEventos(evs); ma_renderCompromissos(); toast('Compromisso marcado como concluído!','ok'); }
+      }
+
+      let ma_swipeStartX = 0;
+      function ma_swipeStart(e, id) { ma_swipeStartX = e.touches[0].clientX; }
+      function ma_swipeMove(e) { e.preventDefault(); }
+      function ma_swipeEnd(e, id) {
+        const dx = e.changedTouches[0].clientX - ma_swipeStartX;
+        if (dx < -50) ma_abrirAcoesItem(id);
+      }
+      function ma_abrirAcoesItem(id) {
+        const ev = ma_getEventos().find(e=>e.id===id);
+        if (!ev) return;
+        const content = document.getElementById('ma-swipe-content');
+        const actions = ev.status==='concluido' ? [] : [
+          { label:'Remarcar', icon:'<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>', color:'blue', action:() => { ma_remarcar(id); ma_fecharSwipe(); }},
+          { label:'Cancelar', icon:'<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>', color:'red', action:() => { ma_cancelar(id); ma_fecharSwipe(); }},
+        ];
+        if (!actions.length) { toast('Este compromisso já foi concluído','info'); return; }
+        content.innerHTML = `<p class="text-sm font-semibold text-marca-900 mb-3">Ações para:<br><span class="text-marca-500 font-normal">${ev.titulo}</span></p><div class="space-y-2">${actions.map(a => `<button onclick="${a.action.toString().match(/ma_\w+/)?.[0]}()" class="w-full flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 hover:bg-gray-50 active:scale-[0.98] transition-all">
+          <span class="${a.color==='red'?'text-red-500':'text-blue-500'}">${a.icon}</span><span class="text-sm font-semibold text-marca-900">${a.label}</span>
+        </button>`).join('')}</div><button onclick="ma_fecharSwipe()" class="w-full mt-3 py-2.5 text-sm text-marca-400 font-medium hover:text-marca-600 transition-colors">Cancelar</button>`;
+        const panel = document.getElementById('ma-swipe-panel');
+        document.getElementById('ma-swipe-actions').classList.remove('hidden');
+        requestAnimationFrame(() => panel.style.transform = 'translateY(0)');
+      }
+      function ma_fecharSwipe() {
+        const panel = document.getElementById('ma-swipe-panel');
+        panel.style.transform = 'translateY(100%)';
+        setTimeout(() => document.getElementById('ma-swipe-actions').classList.add('hidden'), 300);
+      }
+      function ma_remarcar(id) { abrirModal('<div class="space-y-3"><p class="text-sm text-marca-600">Escolha a nova data e horário para remarcar este compromisso.</p><label class="block"><span class="text-xs font-medium text-marca-500">Nova data</span><input type="date" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-marca-900 focus:ring-2 focus:ring-marca-500 focus:border-marca-500 outline-none" /></label><label class="block"><span class="text-xs font-medium text-marca-500">Novo horário</span><input type="time" value="09:00" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-marca-900 focus:ring-2 focus:ring-marca-500 focus:border-marca-500 outline-none" /></label></div>', 'Remarcar Compromisso'); toast('Compromisso remarcado com sucesso!','ok'); }
+      function ma_cancelar(id) {
+        const evs = ma_getEventos();
+        const idx = evs.findIndex(e=>e.id===id);
+        if (idx>=0) { evs.splice(idx,1); ma_salvarEventos(evs); ma_renderCompromissos(); toast('Compromisso cancelado','info'); }
+      }
+      function ma_verRota(endereco) { mostrarTela('mapa-de-obras'); toast('Abrindo mapa com rota...','info'); }
+
+      function ma_abrirNovoAgendamento() {
+        const html = `<div class="space-y-3">
+          <label class="block"><span class="text-xs font-medium text-marca-500">Tipo de serviço</span><select id="ma-novo-tipo" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-marca-900 outline-none focus:ring-2 focus:ring-marca-500"><option value="visita">Visita Técnica</option><option value="orcamento">Orçamento</option><option value="obra">Início de Obra</option></select></label>
+          <label class="block"><span class="text-xs font-medium text-marca-500">Cliente</span><input type="text" id="ma-novo-cliente" placeholder="Nome do cliente" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-marca-900 outline-none focus:ring-2 focus:ring-marca-500" /></label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="block"><span class="text-xs font-medium text-marca-500">Data</span><input type="date" id="ma-novo-data" value="${ma_diaSelecionado}" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-marca-900 outline-none focus:ring-2 focus:ring-marca-500" /></label>
+            <label class="block"><span class="text-xs font-medium text-marca-500">Horário</span><input type="time" id="ma-novo-hora" value="09:00" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-marca-900 outline-none focus:ring-2 focus:ring-marca-500" /></label>
+          </div>
+          <label class="block"><span class="text-xs font-medium text-marca-500">Endereço</span><input type="text" id="ma-novo-endereco" placeholder="Rua, número, bairro" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-marca-900 outline-none focus:ring-2 focus:ring-marca-500" /></label>
+          <label class="block"><span class="text-xs font-medium text-marca-500">Técnico responsável</span><select id="ma-novo-tecnico" class="mt-1 w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-marca-900 outline-none focus:ring-2 focus:ring-marca-500"><option>Carlos Eduardo</option><option>Fernanda Lima</option><option>Antonio Ferreira</option><option>Roberto Silva</option></select></label>
+          <label class="block"><span class="text-xs font-medium text-marca-500">Observações</span><textarea id="ma-novo-obs" rows="2" placeholder="Detalhes do agendamento..." class="mt-1 w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-marca-900 outline-none focus:ring-2 focus:ring-marca-500 resize-none"></textarea></label>
+        </div>`;
+        abrirModal(html, 'Novo Agendamento');
+        window._ma_finalizarNovo = () => {
+          const tipo = document.getElementById('ma-novo-tipo').value;
+          const cliente = document.getElementById('ma-novo-cliente').value.trim();
+          const data = document.getElementById('ma-novo-data').value;
+          const hora = document.getElementById('ma-novo-hora').value;
+          const endereco = document.getElementById('ma-novo-endereco').value.trim();
+          const tecnico = document.getElementById('ma-novo-tecnico').value;
+          const obs = document.getElementById('ma-novo-obs').value.trim();
+          if (!cliente || !endereco) { toast('Preencha cliente e endereço','erro'); return; }
+          const evs = ma_getEventos();
+          const novo = { id: Date.now(), titulo: `${tipo==='visita'?'Visita Técnica':tipo==='orcamento'?'Orçamento':'Início Obra'} - ${cliente}`, tipo, data, hora, duracao: 60, tecnico, endereco, cliente, contato:'', status:'pendente', obs, valor:0 };
+          evs.push(novo); ma_salvarEventos(evs);
+          ma_diaSelecionado = data; ma_mesAtual = parseInt(data.split('-')[1])-1; ma_anoAtual = parseInt(data.split('-')[0]);
+          ma_renderCalendario(); ma_renderCompromissos(); ma_filtrar('todos');
+          fecharModal(); toast('Agendamento criado com sucesso!','ok');
+        };
+        setTimeout(() => {
+          const footer = document.querySelector('.modal-footer');
+          if (footer) {
+            const btn = document.createElement('button');
+            btn.className = 'btn w-full text-sm'; btn.textContent = 'Criar Agendamento';
+            btn.onclick = () => window._ma_finalizarNovo();
+            footer.innerHTML = ''; footer.appendChild(btn);
+          }
+        }, 100);
+      }
+
+      function ma_setupPullToRefresh() {
+        let startY = 0;
+        const section = document.querySelector('[data-tela="minha-agenda"]');
+        section.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, {passive:true});
+        section.addEventListener('touchmove', e => {
+          if (section.scrollTop === 0 && e.touches[0].clientY - startY > 80) {
+            const header = document.getElementById('ma-header');
+            header.style.opacity = '0.6'; header.style.transition = 'opacity 0.3s';
+          }
+        }, {passive:true});
+        section.addEventListener('touchend', e => {
+          const header = document.getElementById('ma-header');
+          header.style.opacity = '1';
+          if (section.scrollTop === 0 && e.changedTouches[0].clientY - startY > 80) {
+            ma_salvarEventos(ma_getEventos());
+            ma_renderCalendario(); ma_renderCompromissos();
+            toast('Agenda atualizada!','info');
+          }
+        }, {passive:true});
+      }
+
+      document.addEventListener('DOMContentLoaded', ma_init);
+      </script>
+    </section>
+
     <!-- TELAS -->
 
   <script>
