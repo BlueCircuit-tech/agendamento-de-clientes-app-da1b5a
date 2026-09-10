@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Constroi — Agendamento & Gestão</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            marca: {
+              50:  '#EEF3FB',
+              100: '#D4E1F6',
+              200: '#A9C3ED',
+              300: '#7EA5E4',
+              400: '#5387DB',
+              500: '#2563EB',
+              600: '#1D56C7',
+              700: '#1641A0',
+              800: '#0F2C78',
+              900: '#1E3A5F',
+              950: '#0F1F35',
+            },
+            destaque: '#2563EB',
+          },
+          fontFamily: {
+            display: ['"Bricolage Grotesque"', 'sans-serif'],
+            body:    ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          boxShadow: {
+            'card':    '0 1px 3px rgba(30,58,95,0.08), 0 1px 2px rgba(30,58,95,0.06)',
+            'card-md': '0 4px 12px rgba(30,58,95,0.10), 0 2px 4px rgba(30,58,95,0.06)',
+            'card-lg': '0 8px 24px rgba(30,58,95,0.12), 0 4px 8px rgba(30,58,95,0.08)',
+            'nav':     '0 -1px 8px rgba(30,58,95,0.10)',
+            'btn':     '0 2px 6px rgba(37,99,235,0.30)',
+            'btn-p':   '0 4px 12px rgba(37,99,235,0.35)',
+          },
+          borderRadius: {
+            'card':  '12px',
+            'card-lg': '16px',
+            'btn':   '10px',
+            'pill':  '9999px',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    *, *::before, *::after { -webkit-tap-highlight-color: transparent; }
+    html { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+    body { overscroll-behavior: none; }
+
+    ::-webkit-scrollbar { width: 0; height: 0; }
+
+    *:focus-visible {
+      outline: 2px solid #2563EB;
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    @keyframes telaEntrada {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    [data-tela]:not(.hidden) {
+      animation: telaEntrada 0.28s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    }
+
+    @keyframes toastEntrada {
+      from { opacity: 0; transform: translateY(-20px) scale(0.94); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes toastSaida {
+      from { opacity: 1; transform: translateY(0) scale(1); }
+      to   { opacity: 0; transform: translateY(-20px) scale(0.94); }
+    }
+    .toast-enter { animation: toastEntrada 0.32s ease-out forwards; }
+    .toast-leave { animation: toastSaida 0.28s ease-in forwards; }
+
+    @keyframes modalFundo   { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes modalCartao  { from { opacity: 0; transform: translateY(24px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    #modal-overlay.modal-aberto  .modal-fundo  { animation: modalFundo 0.22s ease-out forwards; }
+    #modal-overlay.modal-aberto  .modal-cartao { animation: modalCartao 0.28s ease-out forwards; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 9999px;
+      font-size: 0.6875rem; font-weight: 600;
+      letter-spacing: 0.02em; line-height: 1.5;
+    }
+    .card {
+      background: #FFFFFF;
+      border: 1px solid #EEF3FB;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(30,58,95,0.08), 0 1px 2px rgba(30,58,95,0.06);
+      transition: box-shadow 0.2s, transform 0.15s;
+    }
+    .card:active { transform: scale(0.985); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 24px; border-radius: 10px; border: none;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.9375rem;
+      cursor: pointer; transition: all 0.18s ease;
+      box-shadow: 0 2px 6px rgba(37,99,235,0.30);
+    }
+    .btn:active { transform: scale(0.96); box-shadow: 0 1px 3px rgba(37,99,235,0.20); }
+    .btn-ghost {
+      background: transparent; color: #1E3A5F; border: 1.5px solid #EEF3FB;
+      box-shadow: none; font-weight: 500;
+    }
+    .btn-ghost:active { background: #EEF3FB; }
+    .ativo .nav-icon { color: #2563EB; }
+    .ativo .nav-label { color: #2563EB; font-weight: 700; }
+    .ativo { position: relative; }
+    .ativo::before {
+      content: ''; position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+      width: 28px; height: 3px; background: #2563EB; border-radius: 0 0 3px 3px;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-200 text-marca-900 antialiased">
+
+  <!--
+    ═══════════════════════════════════════════════
+    MOLURA DO APARELHO (desktop)
+    ═══════════════════════════════════════════════
+  -->
+  <div id="moldura" class="mx-auto bg-marca-950 overflow-hidden hidden md:block" style="width:390px;height:844px;border-radius:40px;border:6px solid #2a2a2a;box-shadow:0 20px 60px rgba(0,0,0,0.35), 0 0 0 2px rgba(255,255,255,0.06);margin-top:24px;margin-bottom:24px;">
+
+    <!-- Barra de status -->
+    <div class="flex items-center justify-between px-7 pt-3 pb-1 bg-marca-950 select-none" style="height:48px;">
+      <span id="hora-status" class="text-white text-sm font-semibold tracking-wide font-body">9:41</span>
+      <div class="flex items-center gap-1.5">
+        <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M1 9l2 2c4.97-4.97 13.03-4.96 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-6-6l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 3 11zm14.9 2.1l-.6.6C20.4 15.2 22 12.6 22 10c0-4.4-3.6-8-8-8-2.6 0-5.2 1.6-7.1 4.1l-.6-.6C7.6 3.1 9.2 2.1 11 2.1c5 0 9 4 9 9s-4 9-9 9c-1.8 0-3.4-.5-4.9-1.5z"/></svg>
+        <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M15.7 15.7L12 12l-2-2-3.6 3.6c2.7 2.7 7.1 2.7 9.8 0l-3.5-3.5zM2 12l5.5-5.5 3.6 3.6c-1.6 1.6-2.3 3.7-2.3 5.9 0 2.2.7 4.3 2.3 5.9l-3.6 3.6L2 12z"/></svg>
+        <svg class="w-5 h-4 text-white" viewBox="0 0 28 18" fill="currentColor"><rect x="0.75" y="3.75" width="22.5" height="10.5" rx="2.25" stroke="#fff" stroke-width="1.5" fill="none"/><rect x="3" y="5.25" width="18" height="7.5" rx="1" fill="currentColor" opacity="0.45"/><rect x="24" y="6.75" width="2.5" height="4.5" rx="0.75" fill="currentColor" opacity="0.45"/></svg>
+      </div>
+    </div>
+
+    <!-- Área do app -->
+    <div class="relative bg-marca-50 flex flex-col" style="height:calc(100% - 48px);">
+      <main id="app" class="flex-1 overflow-y-auto overflow-x-hidden relative"></main>
+      <nav id="nav-inferior" class="shrink-0 bg-white border-t border-marca-100 flex items-center justify-around py-1.5 px-1" style="box-shadow:0 -1px 8px rgba(30,58,95,0.10);height:64px;"></nav>
+    </div>
+  </div>
+
+  <!--
+    ═══════════════════════════════════════════════
+    APP EM TELA CHEIA (celular real)
+    ═══════════════════════════════════════════════
+  -->
+  <div id="app-full" class="md:hidden flex flex-col bg-marca-50 fixed inset-0 overflow-hidden">
+    <main id="app-m" class="flex-1 overflow-y-auto overflow-x-hidden relative"></main>
+    <nav id="nav-inferior-m" class="shrink-0 bg-white border-t border-marca-100 flex items-center justify-around py-1.5 px-1" style="box-shadow:0 -1px 8px rgba(30,58,95,0.10);height:64px;"></nav>
+  </div>
+
+  <!--
+    ═══════════════════════════════════════════════
+    TOASTS
+    ═══════════════════════════════════════════════
+  -->
+  <div id="toast-container" class="fixed top-4 left-4 right-4 z-[999] flex flex-col items-center gap-2 pointer-events-none"></div>
+
+  <!--
+    ═══════════════════════════════════════════════
+    MODAL
+    ═══════════════════════════════════════════════
+  -->
+  <div id="modal-overlay" class="fixed inset-0 z-[998] hidden" role="dialog" aria-modal="true">
+    <div class="modal-fundo absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="fecharModal()"></div>
+    <div class="absolute inset-0 flex items-end sm:items-center justify-center p-0 sm:p-4 pointer-events-none">
+      <div class="modal-cartao bg-white rounded-t-2xl sm:rounded-2xl w-full max-w-md max-h-[85vh] flex flex-col pointer-events-auto shadow-card-lg">
+        <div class="flex items-center justify-between p-5 border-b border-marca-100 shrink-0">
+          <h3 id="modal-titulo" class="font-display font-700 text-marca-900 text-lg"></h3>
+          <button onclick="fecharModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-marca-50 transition-colors" aria-label="Fechar">
+            <svg class="w-5 h-5 text-marca-900/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div id="modal-conteudo" class="overflow-y-auto p-5"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELAS -->
+
+  <script>
+    /* ─── Navegação ─── */
+    var telasNav = [
+      { id: 'home-do-cliente',             icone: '<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',                                                                                                                           rotulo: 'Início' },
+      { id: 'catalogo-de-servicos',         icone: '<path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',                                                                                     rotulo: 'Catálogo' },
+      { id: 'solicitar-orcamento',          icone: '<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',                                                                                                                                 rotulo: 'Orçamento' },
+      { id: 'minha-agenda',                 icone: '<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',                                                                                                                                                      rotulo: 'Agenda' },
+      { id: 'acompanhar-orcamento',         icone: '<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',                                                                             rotulo: 'Status' },
+      { id: 'chat-com-a-equipe',            icone: '<path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',                                                                                                                                      rotulo: 'Chat' },
+      { id: 'mapa-de-obras',                icone: '<path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',                                                                                                    rotulo: 'Mapa' },
+      { id: 'painel-administrativo',        icone: '<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>', rotulo: 'Painel' },
+      { id: 'galeria-da-obra',              icone: '<path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',                                                                                                                                      rotulo: 'Galeria' },
+      { id: 'perfil-e-configuracoes',       icone: '<path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',                                                                                                                                                                                          rotulo: 'Perfil' },
+    ];
+
+    function montarNav(idContainer) {
+      var nav = document.getElementById(idContainer);
+      telasNav.forEach(function(t) {
+        var btn = document.createElement('button');
+        btn.setAttribute('data-nav', t.id);
+        btn.setAttribute('onclick', "mostrarTela('" + t.id + "')");
+        btn.className = 'flex flex-col items-center justify-center gap-0.5 py-1 px-1 rounded-lg transition-colors duration-200 flex-1 min-w-0';
+        btn.innerHTML = '<svg class="nav-icon w-6 h-6 text-marca-900/40 transition-colors duration-200 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">' + t.icone + '</svg><span class="nav-label text-[0.6rem] font-medium text-marca-900/40 transition-colors duration-200 truncate leading-tight">' + t.rotulo + '</span>';
+        nav.appendChild(btn);
+      });
+    }
+    montarNav('nav-inferior');
+    montarNav('nav-inferior-m');
+
+    /* ─── TELA (roteador) ─── */
+    var telasMap = {};
+
+    function registrarTela(id, html) {
+      telasMap[id] = html;
+      if (!document.querySelector('[data-tela="' + id + '"]')) {
+        var wrapper = document.createElement('div');
+        wrapper.setAttribute('data-tela', id);
+        wrapper.className = id === 'home-do-cliente' ? '' : 'hidden';
+        wrapper.innerHTML = html;
+        document.getElementById('app').appendChild(wrapper);
+        var clone = wrapper.cloneNode(true);
+        document.getElementById('app-m').appendChild(clone);
+      }
+    }
+
+    function mostrarTela(id) {
+      ['app', 'app-m'].forEach(function(containerId) {
+        var container = document.getElementById(containerId);
+        container.querySelectorAll('[data-tela]').forEach(function(s) {
+          s.classList.toggle('hidden', s.dataset.tela !== id);
+        });
+      });
+      ['nav-inferior', 'nav-inferior-m'].forEach(function(navId) {
+        document.querySelectorAll('#' + navId + ' [data-nav]').forEach(function(b) {
+          b.classList.toggle('ativo', b.dataset.nav === id);
+        });
+      });
+      window.scrollTo({ top: 0 });
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      mostrarTela('home-do-cliente');
+    });
+
+    /* ─── Hora da barra de status ─── */
+    function atualizarHora() {
+      var agora = new Date();
+      var h = agora.getHours();
+      var m = agora.getMinutes().toString().padStart(2, '0');
+      document.querySelectorAll('#hora-status').forEach(function(el) {
+        el.textContent = h + ':' + m;
+      });
+    }
+    atualizarHora();
+    setInterval(atualizarHora, 30000);
+
+    /* ─── Toast ─── */
+    var toastContainer = document.getElementById('toast-container');
+    function toast(mensagem, tipo) {
+      tipo = tipo || 'info';
+      var cores = {
+        ok:   { bg: 'bg-green-600',  icone: '<path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' },
+        erro: { bg: 'bg-red-600',    icone: '<path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' },
+        info: { bg: 'bg-marca-800',  icone: '<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' },
+      };
+      var c = cores[tipo] || cores.info;
+      var el = document.createElement('div');
+      el.className = 'toast-enter pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-card shadow-card-md text-white text-sm font-medium max-w-sm';
+      el.innerHTML = '<span class="' + c.bg + ' shrink-0 w-7 h-7 rounded-full flex items-center justify-center"><svg class="w-4 h-4" viewBox="0 0 24 24">' + c.icone + '</svg></span><span class="flex-1">' + mensagem + '</span>';
+      toastContainer.appendChild(el);
+      setTimeout(function() {
+        el.classList.remove('toast-enter');
+        el.classList.add('toast-leave');
+        setTimeout(function() { el.remove(); }, 300);
+      }, 3000);
+    }
+
+    /* ─── Modal ─── */
+    function abrirModal(html, titulo) {
+      var overlay = document.getElementById('modal-overlay');
+      document.getElementById('modal-titulo').textContent = titulo || '';
+      document.getElementById('modal-conteudo').innerHTML = html;
+      overlay.classList.remove('hidden');
+      requestAnimationFrame(function() { overlay.classList.add('modal-aberto'); });
+      document.body.style.overflow = 'hidden';
+    }
+    function fecharModal() {
+      var overlay = document.getElementById('modal-overlay');
+      overlay.classList.remove('modal-aberto');
+      setTimeout(function() { overlay.classList.add('hidden'); document.body.style.overflow = ''; }, 250);
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') fecharModal();
+    });
+
+    /* ─── Formatadores ─── */
+    function brl(valor) {
+      return 'R$ ' + Number(valor).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    function dataBR(iso) {
+      var d = new Date(iso + 'T12:00:00');
+      return d.getDate().toString().padStart(2, '0') + '/' + (d.getMonth() + 1).toString().padStart(2, '0') + '/' + d.getFullYear();
+    }
+
+    /* ─── Helpers visuais ─── */
+    function avatarIniciais(iniciais, cor) {
+      cor = cor || 'bg-marca-500';
+      return '<div class="' + cor + ' w-10 h-10 rounded-full flex items-center justify-center text-white font-display font-700 text-sm shrink-0">' + iniciais + '</div>';
+    }
+    function avatarDocumento(tipo) {
+      var cores = { pdf: 'bg-red-100 text-red-700', doc: 'bg-blue-100 text-blue-700', xls: 'bg-green-100 text-green-700', img: 'bg-purple-100 text-purple-700', png: 'bg-purple-100 text-purple-700', jpg: 'bg-purple-100 text-purple-700' };
+      var c = cores[tipo] || 'bg-gray-100 text-gray-700';
+      return '<div class="' + c + ' w-10 h-10 rounded-lg flex flex-col items-center justify-center font-700 text-[0.6rem] uppercase leading-none shrink-0"><span class="text-base leading-none">' + (tipo === 'pdf' ? '📄' : tipo === 'img' || tipo === 'png' || tipo === 'jpg' ? '🖼' : '📋') + '</span><span>' + tipo.toUpperCase() + '</span></div>';
+    }
+    function cardImagemGradiente() {
+      var grads = ['from-marca-300 to-marca-500', 'from-blue-400 to-destaque', 'from-marca-500 to-blue-400', 'from-blue-500 to-marca-400', 'from-sky-400 to-marca-600', 'from-indigo-400 to-destaque'];
+      var g = grads[Math.floor(Math.random() * grads.length)];
+      return '<div class="w-full h-40 rounded-card bg-gradient-to-br ' + g + ' flex items-center justify-center shrink-0"><svg class="w-12 h-12 text-white/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>';
+    }
+
+    /* ─── Registrar telas (placeholder) ─── */
+    registrarTela('home-do-cliente',             '<div class="p-4 text-center text-marca-900/30 mt-20 font-body">Tela: Home do Cliente</div>');
+    registrarTela('catalogo-de-servicos',         '<div class="p-4 text-center text-marca-900/30 mt-20 font-body">Tela: Catálogo de Serviços</div>');
+    registrarTela('solicitar-orcamento',          '<div class="p-4 text-center text-marca-900/30 mt-20 font-body">Tela: Solicitar Orçamento</div>');
+    registrarTela('minha-agenda',                 '<div class="p-4 text-center text-marca-900/30 mt-20 font-body">Tela: Minha Agenda</div>');
+    registrarTela('acompanhar-orcamento',         '<div class="p-4 text-center text-marca-900/30 mt-20 font-body">Tela: Acompanhar Orçamento</div>');
+    registrarTela('chat-com-a-equipe',            '<div class="p-4 text-center text-marca-900/30 mt-20 font-body">Tela: Chat com a Equipe</div>');
+    registrarTela('mapa-de-obras',                '<div class="p-4 text-center text-marca-900/30 mt-20 font-body">Tela: Mapa de Obras</div>');
+    registrarTela('painel-administrativo',        '<div class="p-4 text-center text-marca-900/30 mt-20 font-body">Tela: Painel Administrativo</div>');
+    registrarTela('galeria-da-obra',              '<div class="p-4 text-center text-marca-900/30 mt-20 font-body">Tela: Galeria da Obra</div>');
+    registrarTela('perfil-e-configuracoes',       '<div class="p-4 text-center text-marca-900/30 mt-20 font-body">Tela: Perfil e Configurações</div>');
+  </script>
+
+</body>
+</html>
