@@ -2209,6 +2209,355 @@
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
 
+    <section data-tela="mapa-de-obras" class="hidden">
+      <style>
+        .mapa-grid { display: grid; grid-template-columns: repeat(12,1fr); grid-template-rows: repeat(10,1fr); position: relative; }
+        .mapa-rua { position: absolute; background: rgba(30,58,95,0.08); border-radius: 2px; }
+        .marcador-obriga { position: absolute; transform: translate(-50%,-100%); cursor: pointer; transition: transform 0.2s ease, filter 0.2s ease; z-index: 10; }
+        .marcador-obriga:hover, .marcador-obriga:active { transform: translate(-50%,-100%) scale(1.2); filter: brightness(1.1); z-index: 20; }
+        .marcador-obriga .pin { width: 32px; height: 32px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+        .marcador-obriga .pin svg { transform: rotate(45deg); }
+        .popup-obriga { position: absolute; bottom: 42px; left: 50%; transform: translateX(-50%); width: 240px; background: #fff; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.18); padding: 14px; z-index: 30; animation: popIn 0.2s ease-out; }
+        @keyframes popIn { from { opacity:0; transform: translateX(-50%) translateY(8px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+        .popup-obriga::after { content:''; position: absolute; bottom:-6px; left:50%; transform: translateX(-50%) rotate(45deg); width:12px; height:12px; background:#fff; box-shadow: 2px 2px 4px rgba(0,0,0,0.08); }
+        .filter-chip { transition: all 0.2s ease; cursor: pointer; user-select: none; }
+        .filter-chip:hover { transform: translateY(-1px); }
+        .filter-chip.active { ring: 2px; }
+        .obras-item { transition: all 0.15s ease; cursor: pointer; }
+        .obras-item:hover { background: #f1f5f9; }
+        .obras-item:active { background: #e2e8f0; }
+        .scrollbar-thin::-webkit-scrollbar { width: 3px; }
+        .scrollbar-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .fade-in { animation: fadeSlideIn 0.3s ease-out; }
+        @keyframes fadeSlideIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+      </style>
+
+      <!-- Cabeçalho da Tela -->
+      <div class="fade-in mb-4">
+        <div class="flex items-center justify-between mb-1">
+          <div>
+            <h2 class="font-display text-xl font-bold text-slate-800">Mapa de Obras</h2>
+            <p class="text-sm text-slate-500 mt-0.5">Acompanhe a localização da equipe em tempo real</p>
+          </div>
+          <button onclick="mapa_de_obras_otimizarRota()" class="flex items-center gap-1.5 bg-marca-600 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl active:scale-95 transition-all shadow-sm hover:bg-marca-700">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+            Otimizar Rota
+          </button>
+        </div>
+      </div>
+
+      <!-- Cards Indicadores -->
+      <div class="fade-in grid grid-cols-4 gap-2 mb-4" style="animation-delay:0.05s">
+        <div class="bg-white rounded-xl p-3 shadow-sm border border-slate-100 text-center">
+          <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center mx-auto mb-1.5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <p class="text-xs text-slate-500">Agendadas</p>
+          <p class="text-lg font-bold text-slate-800" id="count-agendado">3</p>
+        </div>
+        <div class="bg-white rounded-xl p-3 shadow-sm border border-slate-100 text-center">
+          <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center mx-auto mb-1.5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <p class="text-xs text-slate-500">Em Andamento</p>
+          <p class="text-lg font-bold text-slate-800" id="count-andamento">4</p>
+        </div>
+        <div class="bg-white rounded-xl p-3 shadow-sm border border-slate-100 text-center">
+          <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center mx-auto mb-1.5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <p class="text-xs text-slate-500">Concluídas</p>
+          <p class="text-lg font-bold text-slate-800" id="count-concluido">2</p>
+        </div>
+        <div class="bg-white rounded-xl p-3 shadow-sm border border-slate-100 text-center">
+          <div class="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center mx-auto mb-1.5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <p class="text-xs text-slate-500">Urgentes</p>
+          <p class="text-lg font-bold text-slate-800" id="count-urgente">1</p>
+        </div>
+      </div>
+
+      <!-- Filtros -->
+      <div class="fade-in mb-3" style="animation-delay:0.1s">
+        <div class="flex gap-2 overflow-x-auto scrollbar-thin pb-1 -mx-1 px-1">
+          <button onclick="mapa_de_obras_setFiltroStatus('todos')" data-filtro-status="todos" class="filter-chip active flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-marca-600 text-white shadow-sm">Todos</button>
+          <button onclick="mapa_de_obras_setFiltroStatus('agendado')" data-filtro-status="agendado" class="filter-chip flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">Agendado</button>
+          <button onclick="mapa_de_obras_setFiltroStatus('andamento')" data-filtro-status="andamento" class="filter-chip flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">Em Andamento</button>
+          <button onclick="mapa_de_obras_setFiltroStatus('concluido')" data-filtro-status="concluido" class="filter-chip flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">Concluído</button>
+          <button onclick="mapa_de_obras_setFiltroStatus('urgente')" data-filtro-status="urgente" class="filter-chip flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">Urgente</button>
+        </div>
+        <div class="mt-2">
+          <select onchange="mapa_de_obras_setFiltroTecnico(this.value)" class="w-full text-sm bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-slate-700 focus:outline-none focus:ring-2 focus:ring-marca-500 focus:border-transparent appearance-none" style="background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E&quot;); background-repeat: no-repeat; background-position: right 12px center;">
+            <option value="todos">Todos os técnicos</option>
+            <option value="ricardo">Ricardo Mendes</option>
+            <option value="carlos">Carlos Souza</option>
+            <option value="ana">Ana Beatriz</option>
+            <option value="joao">João Pedro</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Mapa + Lista -->
+      <div class="fade-in flex gap-3" style="animation-delay:0.15s; min-height: 420px;">
+        <!-- Mapa -->
+        <div class="flex-1 bg-slate-100 rounded-2xl overflow-hidden relative border border-slate-200" style="min-height:420px;" id="mapa-container">
+          <!-- Ruas simuladas -->
+          <div class="mapa-rua" style="left:8%;top:15%;width:84%;height:4px;"></div>
+          <div class="mapa-rua" style="left:8%;top:35%;width:84%;height:4px;"></div>
+          <div class="mapa-rua" style="left:8%;top:55%;width:84%;height:4px;"></div>
+          <div class="mapa-rua" style="left:8%;top:75%;width:84%;height:4px;"></div>
+          <div class="mapa-rua" style="left:20%;top:5%;width:4px;height:90%;"></div>
+          <div class="mapa-rua" style="left:40%;top:5%;width:4px;height:90%;"></div>
+          <div class="mapa-rua" style="left:60%;top:5%;width:4px;height:90%;"></div>
+          <div class="mapa-rua" style="left:80%;top:5%;width:4px;height:90%;"></div>
+
+          <!-- Blocos de construção (prédios) -->
+          <div class="absolute bg-slate-200/60 rounded-md" style="left:10%;top:17%;width:8%;height:14%;"></div>
+          <div class="absolute bg-slate-200/60 rounded-md" style="left:23%;top:17%;width:14%;height:14%;"></div>
+          <div class="absolute bg-slate-200/60 rounded-md" style="left:43%;top:8%;width:14%;height:22%;"></div>
+          <div class="absolute bg-slate-200/60 rounded-md" style="left:63%;top:37%;width:14%;height:14%;"></div>
+          <div class="absolute bg-slate-200/60 rounded-md" style="left:10%;top:57%;width:28%;height:14%;"></div>
+          <div class="absolute bg-slate-200/60 rounded-md" style="left:43%;top:57%;width:14%;height:14%;"></div>
+          <div class="absolute bg-slate-200/60 rounded-md" style="left:63%;top:57%;width:14%;height:14%;"></div>
+          <div class="absolute bg-slate-200/60 rounded-md" style="left:10%;top:77%;width:14%;height:14%;"></div>
+          <div class="absolute bg-slate-200/60 rounded-md" style="left:43%;top:77%;width:14%;height:14%;"></div>
+
+          <!-- Parques/áreas verdes -->
+          <div class="absolute bg-emerald-100/50 rounded-md" style="left:83%;top:17%;width:10%;height:14%;"></div>
+          <div class="absolute bg-emerald-100/50 rounded-md" style="left:83%;top:77%;width:10%;height:14%;"></div>
+
+          <!-- Labels de ruas -->
+          <span class="absolute text-[9px] text-slate-400 font-medium" style="left:35%;top:12%;">Av. Principal</span>
+          <span class="absolute text-[9px] text-slate-400 font-medium" style="left:5%;top:38%;writing-mode:vertical-lr;transform:rotate(180deg);">Rua das Palmeiras</span>
+
+          <!-- Marcadores serão injetados via JS -->
+          <div id="marcadores-mapa"></div>
+
+          <!-- Legenda -->
+          <div class="absolute bottom-2 left-2 bg-white/90 backdrop-blur-sm rounded-lg p-2 flex gap-2 flex-wrap z-10">
+            <span class="flex items-center gap-1 text-[10px] text-slate-600"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>Agendado</span>
+            <span class="flex items-center gap-1 text-[10px] text-slate-600"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>Andamento</span>
+            <span class="flex items-center gap-1 text-[10px] text-slate-600"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>Concluído</span>
+            <span class="flex items-center gap-1 text-[10px] text-slate-600"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>Urgente</span>
+          </div>
+
+          <!-- Mínimapa mini -->
+          <div class="absolute top-2 right-2 bg-white/80 backdrop-blur-sm rounded-lg p-1.5 z-10">
+            <svg width="40" height="40" viewBox="0 0 40 40"><rect x="2" y="2" width="36" height="36" rx="4" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/><line x1="2" y1="14" x2="38" y2="14" stroke="#cbd5e1" stroke-width="0.5"/><line x1="2" y1="26" x2="38" y2="26" stroke="#cbd5e1" stroke-width="0.5"/><line x1="14" y1="2" x2="14" y2="38" stroke="#cbd5e1" stroke-width="0.5"/><line x1="26" y1="2" x2="26" y2="38" stroke="#cbd5e1" stroke-width="0.5"/><circle cx="20" cy="20" r="3" fill="#2563EB" opacity="0.4"/><circle cx="20" cy="20" r="1.5" fill="#1E3A5F"/></svg>
+          </div>
+        </div>
+
+        <!-- Lista Lateral -->
+        <div class="w-[42%] bg-white rounded-2xl border border-slate-100 shadow-sm flex flex-col overflow-hidden">
+          <div class="px-3 py-2.5 border-b border-slate-100 flex items-center justify-between">
+            <p class="text-xs font-semibold text-slate-600">Roteiro do Dia <span id="obras-roteiro-count" class="text-slate-400 font-normal">(10)</span></p>
+            <span class="text-[10px] text-slate-400">por proximidade</span>
+          </div>
+          <div id="lista-obras" class="flex-1 overflow-y-auto scrollbar-thin" style="max-height:370px;"></div>
+        </div>
+      </div>
+
+      <script>
+      (function() {
+        const coresStatus = {
+          agendado: { bg:'bg-blue-500', bgLight:'bg-blue-100', text:'text-blue-700', border:'border-blue-200', hex:'#3B82F6' },
+          andamento: { bg:'bg-amber-500', bgLight:'bg-amber-100', text:'text-amber-700', border:'border-amber-200', hex:'#F59E0B' },
+          concluido: { bg:'bg-emerald-500', bgLight:'bg-emerald-100', text:'text-emerald-700', border:'border-emerald-200', hex:'#10B981' },
+          urgente: { bg:'bg-red-500', bgLight:'bg-red-100', text:'text-red-700', border:'border-red-200', hex:'#EF4444' }
+        };
+
+        const obr = [
+          { id:1, nome:'Reforma Apartamento Jardins', cliente:'Marcos & Oliveira LTDA', endereco:'Rua Augusta, 1200 — Jardins', tecnico:'ricardo', status:'andamento', lat:22, lng:35, distancia:'1.2 km', tipo:'Reforma Completa', valor:85000, data:'2025-07-18', progresso:65 },
+          { id:2, nome:'Construção Casa Condomínio', cliente:'Fernanda Lopes', endereco:'Av. dos Jardins, 450 — Alto de Pinheiros', tecnico:'carlos', status:'andamento', lat:45, lng:58, distancia:'2.8 km', tipo:'Construção Nova', valor:320000, data:'2025-07-10', progresso:40 },
+          { id:3, nome:'Reforma Telha e Telhado', cliente:'Construtora Horizonte', endereco:'Rua Oscar Freire, 300 — Jardins', tecnico:'ana', status:'urgente', lat:68, lng:22, distancia:'3.5 km', tipo:'Reforma Telhado', valor:22000, data:'2025-07-19', progresso:15 },
+          { id:4, nome:'Ampliação Loja Comercial', cliente:'Loja Fashion Center', endereco:'Av. Paulista, 1800 — Bela Vista', tecnico:'joao', status:'agendado', lat:38, lng:72, distancia:'4.1 km', tipo:'Ampliação', valor:95000, data:'2025-07-22', progresso:0 },
+          { id:5, nome:'Pintura Predio Residencial', cliente:'Síndico Ed. Solar', endereco:'Rua Haddock Lobo, 200 — Cerqueira César', tecnico:'ricardo', status:'andamento', lat:55, lng:45, distancia:'2.1 km', tipo:'Pintura Predial', valor:45000, data:'2025-07-15', progresso:80 },
+          { id:6, nome:'Construção Muro Condomínio', cliente:'Condomínio Parque Verde', endereco:'Rua Pamplona, 800 — Jardim Europa', tecnico:'carlos', status:'agendado', lat:82, lng:38, distancia:'5.0 km', tipo:'Muro/Calçada', valor:38000, data:'2025-07-25', progresso:0 },
+          { id:7, nome:'Reforma Elétrica Completa', cliente:'Dr. Roberto Almeida', endereco:'Alameda Itu, 150 — Jardim Paulista', tecnico:'ana', status:'andamento', lat:15, lng:62, distancia:'1.8 km', tipo:'Instalação Elétrica', valor:28000, data:'2025-07-17', progresso:55 },
+          { id:8, nome:'Reforma Banheiro e Cozinha', cliente:'Patricia Mendes', endereco:'Rua Estados Unidos, 600 — Jardim América', tecnico:'joao', status:'concluido', lat:72, lng:65, distancia:'4.3 km', tipo:'Reforma Ampla', valor:35000, data:'2025-07-12', progresso:100 },
+          { id:9, nome:'Assentamento Piso Cerâmica', cliente:'Loja Decora & Cia', endereco:'Av. Rebouças, 2500 — Pinheiros', tecnico:'ricardo', status:'concluido', lat:28, lng:80, distancia:'3.2 km', tipo:'Assentamento Piso', valor:18000, data:'2025-07-08', progresso:100 },
+          { id:10, nome:'Emergência Vazamento Estrutural', cliente:'Edifício Platinum Tower', endereco:'Rua Funchal, 100 — Vila Olímpia', tecnico:'carlos', status:'agendado', lat:48, lng:18, distancia:'2.5 km', tipo:'Reparo Estrutural', valor:15000, data:'2025-07-21', progresso:0 }
+        ];
+
+        let filtroStatus = 'todos';
+        let filtroTecnico = 'todos';
+        let marcadorAberto = null;
+
+        function getFiltradas() {
+          return obr.filter(o => {
+            const matchStatus = filtroStatus === 'todos' || o.status === filtroStatus;
+            const matchTecnico = filtroTecnico === 'todos' || o.tecnico === filtroTecnico;
+            return matchStatus && matchTecnico;
+          });
+        }
+
+        function getStatusLabel(s) {
+          const m = { agendado:'Agendado', andamento:'Em Andamento', concluido:'Concluído', urgente:'Urgente' };
+          return m[s] || s;
+        }
+
+        function getIniciais(nome) {
+          return nome.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+        }
+
+        function mapa_de_obras_setFiltroStatus(valor) {
+          filtroStatus = valor;
+          document.querySelectorAll('[data-filtro-status]').forEach(btn => {
+            const isActive = btn.dataset.filtroStatus === valor;
+            btn.className = 'filter-chip flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold ' + (isActive
+              ? 'bg-marca-600 text-white shadow-sm active'
+              : btn.dataset.filtroStatus === 'agendado' ? 'bg-blue-100 text-blue-700'
+              : btn.dataset.filtroStatus === 'andamento' ? 'bg-amber-100 text-amber-700'
+              : btn.dataset.filtroStatus === 'concluido' ? 'bg-emerald-100 text-emerald-700'
+              : 'bg-red-100 text-red-700');
+          });
+          mapa_de_obras_renderizar();
+        }
+
+        function mapa_de_obras_setFiltroTecnico(valor) {
+          filtroTecnico = valor;
+          mapa_de_obras_renderizar();
+        }
+
+        function mapa_de_obras_renderizar() {
+          const filtradas = getFiltradas();
+          const container = document.getElementById('marcadores-mapa');
+          container.innerHTML = '';
+          const lista = document.getElementById('lista-obras');
+          lista.innerHTML = '';
+
+          // Atualizar contadores
+          ['agendado','andamento','concluido','urgente'].forEach(s => {
+            const el = document.getElementById('count-' + s);
+            if(el) el.textContent = obr.filter(o => o.status === s).length;
+          });
+
+          if (filtradas.length === 0) {
+            container.innerHTML = '<div class="absolute inset-0 flex items-center justify-center"><div class="text-center px-6"><div class="w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg></div><p class="text-sm text-slate-500 font-medium">Nenhuma obra encontrada</p><p class="text-xs text-slate-400 mt-1">Altere os filtros para ver resultados</p></div></div>';
+            lista.innerHTML = '<div class="flex flex-col items-center justify-center h-full text-center px-4 py-8"><div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div><p class="text-xs text-slate-400">Sem obras com este filtro</p></div>';
+            document.getElementById('obras-roteiro-count').textContent = '(0)';
+            return;
+          }
+
+          document.getElementById('obras-roteiro-count').textContent = '(' + filtradas.length + ')';
+
+          // Renderizar marcadores
+          filtradas.forEach(obra => {
+            const cs = coresStatus[obra.status];
+            const marker = document.createElement('div');
+            marker.className = 'marcador-obriga';
+            marker.style.left = obra.lat + '%';
+            marker.style.top = obra.lng + '%';
+            marker.dataset.id = obra.id;
+            marker.innerHTML = '<div class="pin ' + cs.bg + ' flex items-center justify-center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div>';
+
+            // Popup
+            marker.addEventListener('click', function(e) {
+              e.stopPropagation();
+              if (marcadorAberto === obra.id) { mapa_de_obras_fecharPopup(); return; }
+              mapa_de_obras_fecharPopup();
+              marcadorAberto = obra.id;
+
+              const popup = document.createElement('div');
+              popup.className = 'popup-obriga';
+              popup.id = 'popup-obra-' + obra.id;
+              popup.innerHTML =
+                '<div class="flex items-start justify-between mb-2"><div class="flex-1 min-w-0"><p class="text-sm font-bold text-slate-800 leading-tight truncate">' + obra.nome + '</p><p class="text-[11px] text-slate-500 mt-0.5">' + obra.cliente + '</p></div><span class="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-bold ' + cs.bgLight + ' ' + cs.text + ' ml-2 flex-shrink-0">' + getStatusLabel(obra.status) + '</span></div>' +
+                '<div class="space-y-1 mb-3"><div class="flex items-start gap-1.5"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span class="text-[11px] text-slate-600 leading-tight">' + obra.endereco + '</span></div><div class="flex items-center gap-1.5"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="text-[11px] text-slate-600">' + mapa_de_obras_getTecnicoNome(obra.tecnico) + '</span></div></div>' +
+                '<div class="flex gap-2"><a href="https://maps.google.com/?q=' + encodeURIComponent(obra.endereco) + '" target="_blank" rel="noopener" class="flex-1 flex items-center justify-center gap-1 bg-marca-600 text-white text-xs font-semibold py-2 rounded-lg active:scale-95 transition-all"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>Traçar Rota</a><button onclick="mapa_de_obras_verDetalhe(' + obra.id + ')" class="flex-1 flex items-center justify-center gap-1 bg-slate-100 text-slate-700 text-xs font-semibold py-2 rounded-lg active:scale-95 transition-all"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>Detalhes</button></div>';
+              marker.appendChild(popup);
+            });
+
+            container.appendChild(marker);
+          });
+
+          // Fechar popup ao clicar no mapa
+          document.getElementById('mapa-container').addEventListener('click', function(e) {
+            if (e.target.closest('.marcador-obriga')) return;
+            mapa_de_obras_fecharPopup();
+          });
+
+          // Renderizar lista
+          const sorted = [...filtradas].sort((a,b) => parseFloat(a.distancia) - parseFloat(b.distancia));
+          sorted.forEach((obra, idx) => {
+            const cs = coresStatus[obra.status];
+            const item = document.createElement('div');
+            item.className = 'obras-item px-3 py-2.5 border-b border-slate-50 last:border-0';
+            item.onclick = function() { mapa_de_obras_abrirObra(obra.id); };
+            item.innerHTML =
+              '<div class="flex items-start gap-2.5">' +
+                '<div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ' + cs.bgLight + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="' + cs.hex + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="20 12 20 22 4 22 4 12 4 12 20 12 20 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/></svg></div>' +
+                '<div class="flex-1 min-w-0">' +
+                  '<div class="flex items-center justify-between">' +
+                    '<p class="text-xs font-semibold text-slate-800 truncate">' + obra.nome + '</p>' +
+                    '<span class="text-[10px] text-slate-400 flex-shrink-0 ml-1">' + obra.distancia + '</span>' +
+                  '</div>' +
+                  '<p class="text-[11px] text-slate-500 truncate">' + obra.endereco + '</p>' +
+                  '<div class="flex items-center gap-2 mt-1">' +
+                    '<span class="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-bold ' + cs.bgLight + ' ' + cs.text + '">' + getStatusLabel(obra.status) + '</span>' +
+                    (obra.status === 'andamento' ? '<div class="flex-1 h-1 bg-slate-100 rounded-full overflow-hidden max-w-[60px]"><div class="h-full ' + cs.bg + ' rounded-full" style="width:' + obra.progresso + '%"></div></div><span class="text-[10px] text-slate-400">' + obra.progresso + '%</span>' : '') +
+                  '</div>' +
+                '</div>' +
+              '</div>';
+            lista.appendChild(item);
+          });
+        }
+
+        function mapa_de_obras_getTecnicoNome(t) {
+          const n = { ricardo:'Ricardo Mendes', carlos:'Carlos Souza', ana:'Ana Beatriz Lima', joao:'João Pedro Santos' };
+          return n[t] || t;
+        }
+
+        function mapa_de_obras_getAvatarCor(nome) {
+          const cores = ['bg-blue-500','bg-emerald-500','bg-amber-500','bg-purple-500','bg-rose-500','bg-teal-500'];
+          let hash = 0;
+          for (let i = 0; i < nome.length; i++) hash = nome.charCodeAt(i) + ((hash << 5) - hash);
+          return cores[Math.abs(hash) % cores.length];
+        }
+
+        function mapa_de_obras_fecharPopup() {
+          marcadorAberto = null;
+          document.querySelectorAll('.popup-obriga').forEach(p => p.remove());
+        }
+
+        function mapa_de_obras_abrirObra(id) {
+          const obra = obr.find(o => o.id === id);
+          if (!obra) return;
+          const cs = coresStatus[obra.status];
+          const valorFormatado = obra.valor.toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
+          abrirModal(
+            '<div class="space-y-4">' +
+              '<div class="flex items-center gap-3 mb-1">' +
+                '<div class="w-12 h-12 rounded-xl ' + cs.bgLight + ' flex items-center justify-center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="' + cs.hex + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="20 12 20 22 4 22 4 12 4 12 20 12 20 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/></svg></div>' +
+                '<div><h3 class="font-display font-bold text-slate-800 text-base">' + obra.nome + '</h3><p class="text-xs text-slate-500">' + obra.cliente + '</p></div>' +
+              '</div>' +
+              '<div class="flex items-center gap-2">' +
+                '<span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold ' + cs.bgLight + ' ' + cs.text + '">' + getStatusLabel(obra.status) + '</span>' +
+                '<span class="text-xs text-slate-500">' + obra.tipo + '</span>' +
+              '</div>' +
+              (obra.status === 'andamento' ? '<div><div class="flex justify-between text-xs mb-1"><span class="text-slate-600 font-medium">Progresso</span><span class="font-bold ' + cs.text + '">' + obra.progresso + '%</span></div><div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full ' + cs.bg + ' rounded-full transition-all" style="width:' + obra.progresso + '%"></div></div></div>' : '') +
+              '<div class="bg-slate-50 rounded-xl p-3 space-y-2.5">' +
+                '<div class="flex items-start gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span class="text-xs text-slate-700">' + obra.endereco + '</span></div>' +
+                '<div class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="text-xs text-slate-700">' + mapa_de_obras_getTecnicoNome(obra.tecnico) + '</span></div>' +
+                '<div class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="text-xs text-slate-700">Início: ' + dataBR(obra.data) + '</span></div>' +
+                '<div class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span class="text-xs text-slate-700">Valor: <strong>' + valorFormatado + '</strong></span></div>' +
+              '</div>' +
+              '<div class="bg-blue-50 border border-blue-100 rounded-xl p-3 flex items-start gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0 mt-0.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg><p class="text-xs text-blue-700">Distância do escritório: <strong>' + obra.distancia + '</strong>. Tempo estimado de deslocamento: <strong>' + Math.round(parseFloat(obra.distancia) * 3) + ' min</strong>.</p></div>' +
+              '<div class="flex gap-2 pt-1">' +
+                '<a href="https://maps.google.com/?q=' + encodeURIComponent(obra.endereco) + '" target="_blank" rel="noopener" class="flex-1 text-center bg-marca-600 text-white text-sm font-semibold py-3 rounded-xl active:scale-95 transition-all shadow-sm">Traçar Rota</a>' +
+                '<button onclick="fecharModal(); mostrarTela(\'chat-com-a-equipe\');" class="flex-1 text-center bg-slate-100 text-slate-700 text-sm font-semibold py-3 rounded-xl active:scale-95 transition-all">Chat com Equipe</button>' +
+              '</div>' +
+            '</div>',
+            'Detalhes da Obra'
+          );
+        }
+
+        function mapa_de_obras_otimizarRota() {
+          const filtradas = getFiltradas();
+          if (filtradas.length < 2) { toast('Selecione ao menos 2 obras para otimizar a rota', 'erro'); return; }
+          const sorted = [...filtradas].sort((a,b) => parseFloat(a.distancia) - parseFloat(b.distancia));
+          const nomes = sorted.map(o => o.nome.length > 20 ? o.nome.slice(0,20)+'...' : o.nome).join(', ');
+          toast('Rota otimizada: ' + sorted.length + ' obras em ' + sorted[sorted.length-1].distancia + ' de distância total', 'ok');
+        }
+
+        mapa_de_obras_renderizar();
+      })();
+      </script>
+    </section>
+
     <!-- TELAS -->
 
   <script>
