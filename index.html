@@ -190,7 +190,191 @@
     </div>
   </div>
 
-  <!-- TELAS -->
+  <section data-tela="home-do-cliente" class="hidden">
+  <div class="px-5 pt-6 pb-24 space-y-5">
+    <div>
+      <p class="text-sm font-body text-gray-500">Bom dia</p>
+      <h1 class="text-2xl font-display font-bold text-marca-900 mt-0.5">Carlos Mendes</h1>
+      <p class="text-sm text-gray-500 mt-1">Como posso ajudar você hoje?</p>
+    </div>
+
+    <div class="relative">
+      <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input id="home-busca" type="text" placeholder="Buscar por tipo de obra..."
+        class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-sm font-body focus:outline-none focus:ring-2 focus:ring-marca-500 focus:border-transparent transition-all shadow-sm">
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+      <button onclick="mostrarTela('catalogo-de-servicos')" class="card-marca group relative overflow-hidden bg-white rounded-2xl p-4 shadow-sm border border-gray-100 text-left transition-all hover:shadow-md hover:border-marca-200 active:scale-95">
+        <div class="w-11 h-11 rounded-xl bg-marca-50 flex items-center justify-center mb-3 group-hover:bg-marca-100 transition-colors">
+          <svg class="w-6 h-6 text-marca-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+        </div>
+        <p class="font-display font-semibold text-sm text-marca-900">Solicitar Orçamento</p>
+        <p class="text-xs text-gray-500 mt-0.5">Catálogo de serviços</p>
+      </button>
+      <button onclick="mostrarTela('minha-agenda')" class="card-marca group relative overflow-hidden bg-white rounded-2xl p-4 shadow-sm border border-gray-100 text-left transition-all hover:shadow-md hover:border-marca-200 active:scale-95">
+        <div class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center mb-3 group-hover:bg-blue-100 transition-colors">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        </div>
+        <p class="font-display font-semibold text-sm text-marca-900">Minha Agenda</p>
+        <p class="text-xs text-gray-500 mt-0.5">3 visitas esta semana</p>
+      </button>
+      <button onclick="mostrarTela('chat-com-a-equipe')" class="card-marca group relative overflow-hidden bg-white rounded-2xl p-4 shadow-sm border border-gray-100 text-left transition-all hover:shadow-md hover:border-marca-200 active:scale-95">
+        <div class="w-11 h-11 rounded-xl bg-green-50 flex items-center justify-center mb-3 group-hover:bg-green-100 transition-colors relative">
+          <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.77 9.77 0 01-3.46-.58L3 21l1.58-4.42A8.97 8.97 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          <span class="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 rounded-full text-white text-[10px] font-bold flex items-center justify-center">2</span>
+        </div>
+        <p class="font-display font-semibold text-sm text-marca-900">Chat</p>
+        <p class="text-xs text-gray-500 mt-0.5">2 mensagens novas</p>
+      </button>
+      <button onclick="mostrarTela('mapa-de-obras')" class="card-marca group relative overflow-hidden bg-white rounded-2xl p-4 shadow-sm border border-gray-100 text-left transition-all hover:shadow-md hover:border-marca-200 active:scale-95">
+        <div class="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center mb-3 group-hover:bg-amber-100 transition-colors">
+          <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243A8 8 0 1117.657 16.657z"/><circle cx="12" cy="11" r="1.5" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <p class="font-display font-semibold text-sm text-marca-900">Mapa</p>
+        <p class="text-xs text-gray-500 mt-0.5">Obras próximas</p>
+      </button>
+    </div>
+
+    <div onclick="mostrarTela('catalogo-de-servicos')" class="relative bg-marca-900 rounded-2xl overflow-hidden cursor-pointer active:scale-[0.98] transition-transform">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-marca-600 rounded-full -translate-y-1/2 translate-x-1/4 opacity-40"></div>
+      <div class="absolute bottom-0 left-0 w-24 h-24 bg-marca-600 rounded-full translate-y-1/2 -translate-x-1/4 opacity-30"></div>
+      <div class="relative p-5">
+        <span class="inline-block px-3 py-1 bg-amber-400 text-marca-900 text-xs font-bold rounded-full mb-2">DESTAQUE</span>
+        <h3 class="font-display font-bold text-lg text-white">Reforma Completa</h3>
+        <p class="text-marca-200 text-sm mt-1 leading-relaxed">A partir de R$ 18.000<br>Parcelamos em até 12x sem juros</p>
+        <div class="flex items-center mt-3 text-amber-400 text-sm font-semibold">
+          <span>Solicitar orçamento</span>
+          <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="font-display font-bold text-lg text-marca-900">Próximos Agendamentos</h2>
+        <button onclick="mostrarTela('minha-agenda')" class="text-sm text-marca-600 font-semibold hover:text-marca-700 transition-colors">Ver todos</button>
+      </div>
+      <div id="lista-agendamentos" class="space-y-3"></div>
+    </div>
+
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-display font-bold text-marca-900">Último Projeto</h3>
+        <span class="badge badge-azul">Em andamento</span>
+      </div>
+      <p class="text-sm text-gray-600 mb-1">Reforma do Apartamento — Jardins</p>
+      <p class="text-xs text-gray-400 mb-3">Iniciado em 15/01/2026</p>
+      <div class="w-full bg-gray-100 rounded-full h-2.5 mb-2">
+        <div id="barra-progresso" class="bg-marca-500 h-2.5 rounded-full transition-all duration-500" style="width: 65%"></div>
+      </div>
+      <div class="flex items-center justify-between">
+        <span id="texto-progresso" class="text-xs text-gray-500">65% concluído</span>
+        <button onclick="mostrarTela('galeria-da-obra')" class="text-xs text-marca-600 font-semibold hover:text-marca-700 transition-colors">Ver detalhes</button>
+      </div>
+    </div>
+
+    <div>
+      <h2 class="font-display font-bold text-lg text-marca-900 mb-3">Notificações</h2>
+      <div id="lista-notificacoes" class="space-y-2.5"></div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const agendamentos = [
+        { id: 1, servico: 'Visita Técnica', data: '2026-01-28', hora: '09:00', endereco: 'Rua das Acácias, 120 — Moema, SP', status: 'confirmado', cor: 'verde', icone: 'casa' },
+        { id: 2, servico: 'Medição de Obra', data: '2026-01-29', hora: '14:00', endereco: 'Av. Brasil, 890 — Jardins, SP', status: 'pendente', cor: 'amarelo', icone: 'regua' },
+        { id: 3, servico: 'Acompanhamento de Obra', data: '2026-01-30', hora: '10:30', endereco: 'Rua Bahia, 45 — Vila Mariana, SP', status: 'confirmado', cor: 'verde', icone: 'capacete' },
+        { id: 4, servico: 'Reunião de Entrega', data: '2026-02-02', hora: '16:00', endereco: 'Rua Oscar Freire, 320 — Jardins, SP', status: 'pendente', cor: 'amarelo', icone: 'entrega' },
+      ];
+
+      const notificacoes = [
+        { id: 1, texto: 'Orçamento #2847 aprovado para Reforma do Apartamento', tempo: 'Há 2 horas', lida: false, cor: 'verde' },
+        { id: 2, texto: 'Visita técnica confirmada para amanhã às 09h', tempo: 'Há 4 horas', lida: false, cor: 'azul' },
+        { id: 3, texto: 'Mensagem nova de Eng. Roberto no chat', tempo: 'Há 6 horas', lida: true, cor: 'azul' },
+        { id: 4, texto: 'Pagamento de R$ 2.400 confirmado com sucesso', tempo: 'Ontem', lida: true, cor: 'verde' },
+        { id: 5, texto: 'Documento do projeto enviado pela equipe', tempo: 'Ontem', lida: true, cor: 'cinza' },
+      ];
+
+      const statusBadge = (s, c) => {
+        if (c === 'verde') return '<span class="badge badge-verde">' + s + '</span>';
+        if (c === 'amarelo') return '<span class="badge badge-amarelo">' + s + '</span>';
+        return '<span class="badge badge-cinza">' + s + '</span>';
+      };
+
+      const renderAgendamentos = (lista) => {
+        const el = document.getElementById('lista-agendamentos');
+        if (!lista.length) { el.innerHTML = '<div class="text-center py-8 text-gray-400"><p class="text-sm">Nenhum agendamento encontrado</p></div>'; return; }
+        el.innerHTML = lista.map(a => {
+          const dataObj = new Date(a.data + 'T00:00:00');
+          const dia = String(dataObj.getDate()).padStart(2, '0');
+          const mes = dataObj.toLocaleString('pt-BR', { month: 'short' }).replace('.', '');
+          return '<div onclick="mostrarTela(\'minha-agenda\')" class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 cursor-pointer hover:shadow-md hover:border-marca-200 transition-all active:scale-[0.98]">' +
+            '<div class="flex items-start gap-3.5">' +
+              '<div class="flex-shrink-0 w-12 h-12 rounded-xl bg-marca-50 flex flex-col items-center justify-center">' +
+                '<span class="text-xs font-bold text-marca-600 uppercase leading-none">' + mes + '</span>' +
+                '<span class="text-lg font-display font-bold text-marca-900 leading-tight">' + dia + '</span>' +
+              '</div>' +
+              '<div class="flex-1 min-w-0">' +
+                '<div class="flex items-center justify-between gap-2">' +
+                  '<p class="font-display font-semibold text-sm text-marca-900 truncate">' + a.servico + '</p>' +
+                  statusBadge(a.status, a.cor) +
+                '</div>' +
+                '<div class="flex items-center mt-1 text-xs text-gray-500">' +
+                  '<svg class="w-3.5 h-3.5 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' +
+                  '<span class="truncate">' + a.hora + ' &nbsp;·&nbsp; ' + a.endereco + '</span>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      };
+
+      const renderNotificacoes = (lista) => {
+        const el = document.getElementById('lista-notificacoes');
+        if (!lista.length) { el.innerHTML = '<div class="text-center py-6 text-gray-400"><p class="text-sm">Nenhuma notificação</p></div>'; return; }
+        el.innerHTML = lista.map(n => {
+          const corBorda = n.lida ? 'border-gray-100' : 'border-l-4 border-l-marca-500';
+          const bg = n.lida ? 'bg-gray-50' : 'bg-white';
+          return '<div onclick="home_do_cliente_marcarLida(' + n.id + ')" class="' + bg + ' rounded-xl p-3.5 border border-gray-100 ' + corBorda + ' cursor-pointer hover:shadow-sm transition-all active:scale-[0.98]">' +
+            '<div class="flex items-start gap-3">' +
+              '<div class="w-8 h-8 rounded-full bg-marca-50 flex items-center justify-center flex-shrink-0 mt-0.5">' +
+                '<svg class="w-4 h-4 text-marca-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>' +
+              '</div>' +
+              '<div class="flex-1 min-w-0">' +
+                '<p class="text-sm text-marca-900 leading-snug">' + n.texto + '</p>' +
+                '<span class="text-xs text-gray-400 mt-1 block">' + n.tempo + '</span>' +
+              '</div>' +
+              (n.lida ? '' : '<span class="w-2 h-2 rounded-full bg-marca-500 flex-shrink-0 mt-1.5"></span>') +
+            '</div>' +
+          '</div>';
+        }).join('');
+      };
+
+      window.home_do_cliente_marcarLida = function(id) {
+        const n = notificacoes.find(x => x.id === id);
+        if (n) { n.lida = true; renderNotificacoes(notificacoes); }
+      };
+
+      const buscaEl = document.getElementById('home-busca');
+      if (buscaEl) {
+        buscaEl.addEventListener('input', function() {
+          const termo = this.value.toLowerCase().trim();
+          const filtrados = termo
+            ? agendamentos.filter(a => a.servico.toLowerCase().includes(termo) || a.endereco.toLowerCase().includes(termo))
+            : agendamentos;
+          renderAgendamentos(filtrados);
+        });
+      }
+
+      renderAgendamentos(agendamentos);
+      renderNotificacoes(notificacoes);
+    })();
+  </script>
+</section>
+
+    <!-- TELAS -->
 
   <script>
     /* ─── Navegação ─── */
