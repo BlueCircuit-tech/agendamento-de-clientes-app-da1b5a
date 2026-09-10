@@ -1433,6 +1433,456 @@
       </script>
     </section>
 
+    <section data-tela="acompanhar-orcamento" class="hidden">
+  <div id="orc-content"></div>
+  <script>
+    const ORC_DATA = {
+      numero: 'ORC-2024-00847',
+      cliente: 'Carlos Eduardo Mendes',
+      obra: 'Reforma Completa — Apartamento 302, Edifício Monteiro',
+      endereco: 'Rua das Palmeiras, 450 — Jardim Europa, São Paulo-SP',
+      emissao: '2024-12-15',
+      validade: '2025-01-15',
+      prazoExecucao: '25 dias úteis',
+      inicioObra: '2024-12-22',
+      status: 'pendente',
+      formaPagamento: 'Entrada 40% + 2x de 30%',
+      itens: [
+        { desc: 'Demolição e Remoção de Entulho', qtd: 1, valor: 3200 },
+        { desc: 'Instalação Elétrica Completa', qtd: 1, valor: 8500 },
+        { desc: 'Instalação Hidráulica', qtd: 1, valor: 4800 },
+        { desc: 'Assentamento de Piso Cerâmica 60x60', qtd: 55, valor: 89.9 },
+        { desc: 'Forro de Gesso Acartonado', qtd: 42, valor: 65 },
+        { desc: 'Pintura de Paredes e Tetos', qtd: 1, valor: 4200 },
+        { desc: 'Revestimento de Fachada', qtd: 1, valor: 3100 },
+        { desc: 'Instalação de Portas e Janelas', qtd: 6, valor: 450 },
+        { desc: 'Mão de Obra Geral', qtd: 25, valor: 350 },
+        { desc: 'Gestão e Fiscalização de Obra', qtd: 25, valor: 180 },
+      ],
+      timeline: [
+        { label: 'Orçamento Enviado', data: '15/12/2024', icon: 'send', done: true },
+        { label: 'Visualizado pelo Cliente', data: '18/12/2024', icon: 'eye', done: true },
+        { label: 'Aguardando Aprovação', data: '—', icon: 'clock', done: false, current: true },
+        { label: 'Em Produção', data: '—', icon: 'gear', done: false },
+      ],
+      fotosProgresso: [
+        { legenda: 'Demolição iniciada — 22/12', cor: 'bg-blue-600' },
+        { legenda: 'Instalação elétrica — 24/12', cor: 'bg-amber-600' },
+        { legenda: 'Assentamento de piso — 28/12', cor: 'bg-emerald-600' },
+        { legenda: 'Pintura iniciada — 02/01', cor: 'bg-indigo-600' },
+      ],
+      pagamentos: [
+        { parcela: 'Entrada', vencimento: '22/12/2024', valor: 11580, status: 'pago' },
+        { parcela: '1ª Parcela', vencimento: '05/01/2025', valor: 8685, status: 'pendente' },
+        { parcela: '2ª Parcela', vencimento: '19/01/2025', valor: 8685, status: 'pendente' },
+      ]
+    };
+
+    function acompanhar_orcamento_total() {
+      return ORC_DATA.itens.reduce((s, i) => s + i.qtd * i.valor, 0);
+    }
+
+    function acompanhar_orcamento_subtotal(item) {
+      return item.qtd * item.valor;
+    }
+
+    function acompanhar_orcamento_abrirTimeline() {
+      const el = document.getElementById('orc-timeline-panel');
+      el.classList.toggle('hidden');
+    }
+
+    function acompanhar_orcamento_abrirPagamentos() {
+      const el = document.getElementById('orc-pagamentos-panel');
+      el.classList.toggle('hidden');
+    }
+
+    function acompanhar_orcamento_abrirFotos() {
+      const el = document.getElementById('orc-fotos-panel');
+      el.classList.toggle('hidden');
+    }
+
+    function acompanhar_orcamento_aprovar() {
+      abrirModal(`
+        <div class="text-center py-4">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <h3 class="font-display text-lg text-gray-900 mb-2">Confirmar Aprovação</h3>
+          <p class="text-gray-500 text-sm mb-6">Ao aprovar, o orçamento <strong>${ORC_DATA.numero}</strong> entra em produção e a equipe técnica será notificada para iniciar a obra.</p>
+          <div class="flex gap-3 justify-center">
+            <button onclick="fecharModal()" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors">Cancelar</button>
+            <button onclick="acompanhar_orcamento_confirmarAprovacao()" class="px-5 py-2.5 rounded-xl bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors active:scale-95">Confirmar Aprovação</button>
+          </div>
+        </div>
+      `, 'Aprovar Orçamento');
+    }
+
+    function acompanhar_orcamento_confirmarAprovacao() {
+      fecharModal();
+      ORC_DATA.status = 'aprovado';
+      ORC_DATA.timeline[2].done = true;
+      ORC_DATA.timeline[2].current = false;
+      ORC_DATA.timeline[2].data = new Date().toLocaleDateString('pt-BR');
+      ORC_DATA.timeline[3].done = true;
+      ORC_DATA.timeline[3].current = true;
+      ORC_DATA.pagamentos[0].status = 'pago';
+      renderOrcamento();
+      toast('Orçamento aprovado com sucesso! A equipe foi notificada.', 'ok');
+    }
+
+    function acompanhar_orcamento_solicitarAlteracao() {
+      abrirModal(`
+        <div class="space-y-4">
+          <h3 class="font-display text-lg text-gray-900">Solicitar Alteração</h3>
+          <p class="text-gray-500 text-sm">Descreva as alterações que deseja solicitar para o orçamento <strong>${ORC_DATA.numero}</strong>.</p>
+          <textarea id="orc-alteracao-texto" rows="4" placeholder="Ex: Gostaria de incluir instalação de ar-condicionado nos ambientes..." class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-marca-500 focus:border-transparent resize-none"></textarea>
+          <div class="flex gap-3 justify-end">
+            <button onclick="fecharModal()" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors">Cancelar</button>
+            <button onclick="acompanhar_orcamento_enviarAlteracao()" class="px-5 py-2.5 rounded-xl bg-amber-500 text-white text-sm font-medium hover:bg-amber-600 transition-colors active:scale-95">Enviar Solicitação</button>
+          </div>
+        </div>
+      `, 'Solicitar Alteração');
+    }
+
+    function acompanhar_orcamento_enviarAlteracao() {
+      const texto = document.getElementById('orc-alteracao-texto').value.trim();
+      if (!texto) {
+        toast('Descreva a alteração desejada.', 'erro');
+        return;
+      }
+      fecharModal();
+      toast('Solicitação de alteração enviada! Retornaremos em até 24h.', 'ok');
+    }
+
+    function acompanhar_orcamento_verItem(itemIdx) {
+      const item = ORC_DATA.itens[itemIdx];
+      const total = acompanhar_orcamento_subtotal(item);
+      abrirModal(`
+        <div class="space-y-3">
+          <div class="w-12 h-12 bg-marca-100 rounded-xl flex items-center justify-center">
+            <svg class="w-6 h-6 text-marca-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          </div>
+          <h3 class="font-display text-lg text-gray-900">${item.desc}</h3>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-gray-50 rounded-xl p-3"><span class="text-xs text-gray-400 block">Quantidade</span><span class="text-sm font-semibold text-gray-800">${item.qtd} ${item.qtd === 1 ? 'un' : 'un'}</span></div>
+            <div class="bg-gray-50 rounded-xl p-3"><span class="text-xs text-gray-400 block">Valor Unitário</span><span class="text-sm font-semibold text-gray-800">${brl(item.valor)}</span></div>
+            <div class="bg-gray-50 rounded-xl p-3 col-span-2"><span class="text-xs text-gray-400 block">Subtotal</span><span class="text-sm font-bold text-marca-700">${brl(total)}</span></div>
+          </div>
+          <div class="flex justify-end pt-2">
+            <button onclick="fecharModal()" class="px-5 py-2.5 rounded-xl bg-marca-700 text-white text-sm font-medium hover:bg-marca-800 transition-colors active:scale-95">Fechar</button>
+          </div>
+        </div>
+      `, 'Detalhe do Item');
+    }
+
+    function acompanhar_orcamento_verFoto(idx) {
+      const foto = ORC_DATA.fotosProgresso[idx];
+      abrirModal(`
+        <div class="text-center">
+          <div class="w-full h-64 ${foto.cor} rounded-2xl mb-4 flex items-center justify-center">
+            <svg class="w-16 h-16 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+          <p class="text-gray-700 font-medium">${foto.legenda}</p>
+          <p class="text-gray-400 text-sm mt-1">Enviada pela equipe técnica</p>
+          <div class="flex justify-center gap-3 mt-5">
+            <button onclick="fecharModal()" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors">Fechar</button>
+            <button onclick="mostrarTela('chat-com-a-equipe');fecharModal();" class="px-5 py-2.5 rounded-xl bg-marca-700 text-white text-sm font-medium hover:bg-marca-800 transition-colors active:scale-95">Chat com Equipe</button>
+          </div>
+        </div>
+      `, 'Foto do Progresso');
+    }
+
+    function acompanhar_orcamento_verPagamento(idx) {
+      const p = ORC_DATA.pagamentos[idx];
+      const statusMap = { pago: { label: 'Pago', cls: 'bg-green-100 text-green-700' }, pendente: { label: 'Pendente', cls: 'bg-amber-100 text-amber-700' }, atrasado: { label: 'Atrasado', cls: 'bg-red-100 text-red-700' } };
+      const s = statusMap[p.status] || statusMap.pendente;
+      abrirModal(`
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display text-lg text-gray-900">${p.parcela}</h3>
+            <span class="px-3 py-1 rounded-full text-xs font-medium ${s.cls}">${s.label}</span>
+          </div>
+          <div class="bg-gray-50 rounded-xl p-4 space-y-2">
+            <div class="flex justify-between text-sm"><span class="text-gray-500">Valor</span><span class="font-semibold text-gray-800">${brl(p.valor)}</span></div>
+            <div class="flex justify-between text-sm"><span class="text-gray-500">Vencimento</span><span class="font-semibold text-gray-800">${p.vencimento}</span></div>
+          </div>
+          ${p.status === 'pendente' ? `<button onclick="acompanhar_orcamento_pagar(${idx});fecharModal();" class="w-full py-3 rounded-xl bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors active:scale-95">Pagar Agora</button>` : ''}
+          <button onclick="fecharModal()" class="w-full py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors">Fechar</button>
+        </div>
+      `, p.parcela);
+    }
+
+    function acompanhar_orcamento_pagar(idx) {
+      ORC_DATA.pagamentos[idx].status = 'pago';
+      toast(`Pagamento de ${ORC_DATA.pagamentos[idx].parcela} confirmado!`, 'ok');
+      renderOrcamento();
+    }
+
+    function acompanhar_orcamento_compartilhar() {
+      toast('Link do orçamento copiado para a área de transferência!', 'ok');
+    }
+
+    function acompanhar_orcamento_baixarPDF() {
+      toast('Gerando PDF do orçamento... Download iniciado.', 'ok');
+    }
+
+    const SVG_ICONS = {
+      send: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>',
+      eye: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>',
+      clock: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+      gear: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>',
+      check: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>',
+      mapPin: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>',
+      calendar: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>',
+      chevronDown: '<svg class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>',
+      share: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>',
+      download: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>',
+      building: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>',
+      photo: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>',
+      x: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>',
+    };
+
+    function acompanhar_orcamento_renderTimeline() {
+      return ORC_DATA.timeline.map(t => `
+        <div class="flex items-start gap-3">
+          <div class="flex flex-col items-center">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center ${t.done ? 'bg-green-100 text-green-600' : t.current ? 'bg-amber-100 text-amber-600' : 'bg-gray-100 text-gray-400'}">
+              ${t.done ? SVG_ICONS.check : (SVG_ICONS[t.icon] || SVG_ICONS.clock)}
+            </div>
+            ${t !== ORC_DATA.timeline[ORC_DATA.timeline.length - 1] ? `<div class="w-0.5 h-8 ${t.done ? 'bg-green-300' : 'bg-gray-200'}"></div>` : ''}
+          </div>
+          <div class="pb-4">
+            <p class="text-sm font-medium ${t.done ? 'text-gray-800' : t.current ? 'text-amber-700' : 'text-gray-400'}">${t.label}</p>
+            <p class="text-xs text-gray-400 mt-0.5">${t.data}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function acompanhar_orcamento_renderPagamentos() {
+      const statusMap = { pago: { label: 'Pago', cls: 'bg-green-100 text-green-700' }, pendente: { label: 'Pendente', cls: 'bg-amber-100 text-amber-700' } };
+      return ORC_DATA.pagamentos.map((p, i) => {
+        const s = statusMap[p.status] || statusMap.pendente;
+        return `
+          <div onclick="acompanhar_orcamento_verPagamento(${i})" class="flex items-center justify-between p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors active:scale-[0.98]">
+            <div>
+              <p class="text-sm font-medium text-gray-800">${p.parcela}</p>
+              <p class="text-xs text-gray-400 mt-0.5">Vencimento ${p.vencimento}</p>
+            </div>
+            <div class="text-right flex items-center gap-2">
+              <span class="text-sm font-semibold text-gray-700">${brl(p.valor)}</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-medium ${s.cls}">${s.label}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function acompanhar_orcamento_renderFotos() {
+      if (ORC_DATA.fotosProgresso.length === 0) return '<p class="text-sm text-gray-400 text-center py-4">Nenhuma foto de progresso enviada ainda.</p>';
+      return ORC_DATA.fotosProgresso.map((f, i) => `
+        <div onclick="acompanhar_orcamento_verFoto(${i})" class="cursor-pointer group">
+          <div class="w-full aspect-video ${f.cor} rounded-xl flex items-center justify-center relative overflow-hidden group-hover:brightness-110 transition-all active:scale-[0.97]">
+            <svg class="w-10 h-10 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+              <svg class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/></svg>
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 mt-1.5">${f.legenda}</p>
+        </div>
+      `).join('');
+    }
+
+    function renderOrcamento() {
+      const total = acompanhar_orcamento_total();
+      const isAprovado = ORC_DATA.status === 'aprovado';
+      const initials = ORC_DATA.cliente.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+
+      const html = `
+        <div class="min-h-screen bg-gray-50 pb-24">
+          <!-- Cabeçalho da Tela -->
+          <div class="bg-marca-800 text-white px-5 pt-6 pb-5 rounded-b-3xl">
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <p class="text-marca-200 text-xs font-medium tracking-wider uppercase mb-1">Orçamento</p>
+                <h1 class="font-display text-xl font-bold">${ORC_DATA.numero}</h1>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="acompanhar_orcamento_compartilhar()" class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors active:scale-95" title="Compartilhar">
+                  ${SVG_ICONS.share}
+                </button>
+                <button onclick="acompanhar_orcamento_baixarPDF()" class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors active:scale-95" title="Baixar PDF">
+                  ${SVG_ICONS.download}
+                </button>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 mb-3">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${isAprovado ? 'bg-green-400/20 text-green-300' : 'bg-amber-400/20 text-amber-300'}">
+                ${isAprovado ? SVG_ICONS.check : SVG_ICONS.clock}
+                ${isAprovado ? 'Em Andamento' : 'Aguardando Aprovação'}
+              </span>
+              <span class="text-marca-200 text-xs">Validade até ${dataBR(ORC_DATA.validade)}</span>
+            </div>
+            <div class="flex items-center gap-3 bg-white/10 rounded-xl p-3">
+              <div class="w-10 h-10 rounded-full bg-marca-400 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">${initials}</div>
+              <div class="min-w-0">
+                <p class="text-sm font-medium text-white truncate">${ORC_DATA.cliente}</p>
+                <p class="text-xs text-marca-200 truncate">${ORC_DATA.obra}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="px-5 mt-4 space-y-4">
+            <!-- Informações da Obra -->
+            <div class="card p-4">
+              <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Informações da Obra</h2>
+              <div class="space-y-2.5">
+                <div class="flex items-start gap-2.5">
+                  ${SVG_ICONS.building}
+                  <div><p class="text-sm text-gray-700">${ORC_DATA.obra}</p><p class="text-xs text-gray-400 mt-0.5">${ORC_DATA.endereco}</p></div>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  ${SVG_ICONS.calendar}
+                  <p class="text-sm text-gray-700">Prazo de execução: <strong class="text-gray-900">${ORC_DATA.prazoExecucao}</strong></p>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  ${SVG_ICONS.mapPin}
+                  <p class="text-sm text-gray-700">Início previsto: <strong class="text-gray-900">${dataBR(ORC_DATA.inicioObra)}</strong></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Itens do Orçamento -->
+            <div class="card overflow-hidden">
+              <div class="p-4 pb-3 flex items-center justify-between">
+                <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Itens do Orçamento</h2>
+                <span class="text-xs text-gray-400">${ORC_DATA.itens.length} itens</span>
+              </div>
+              <div class="border-t border-gray-100">
+                <div class="grid grid-cols-12 gap-2 px-4 py-2 bg-gray-50 text-xs font-medium text-gray-400 uppercase tracking-wider">
+                  <div class="col-span-6">Item</div>
+                  <div class="col-span-2 text-center">Qtd</div>
+                  <div class="col-span-2 text-right">Vl. Unit.</div>
+                  <div class="col-span-2 text-right">Subtotal</div>
+                </div>
+                ${ORC_DATA.itens.map((item, i) => {
+                  const sub = acompanhar_orcamento_subtotal(item);
+                  return `
+                    <div onclick="acompanhar_orcamento_verItem(${i})" class="grid grid-cols-12 gap-2 px-4 py-3 border-t border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors active:scale-[0.99]">
+                      <div class="col-span-6">
+                        <p class="text-sm text-gray-800 leading-tight">${item.desc}</p>
+                      </div>
+                      <div class="col-span-2 text-center text-sm text-gray-500">${item.qtd}</div>
+                      <div class="col-span-2 text-right text-sm text-gray-500">${brl(item.valor)}</div>
+                      <div class="col-span-2 text-right text-sm font-semibold text-gray-800">${brl(sub)}</div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+              <div class="px-4 py-3 bg-marca-50 border-t border-marca-100 flex justify-between items-center">
+                <span class="text-sm font-semibold text-marca-800">Valor Total</span>
+                <span class="text-lg font-bold text-marca-800 font-display">${brl(total)}</span>
+              </div>
+            </div>
+
+            <!-- Forma de Pagamento -->
+            <div class="card p-4">
+              <button onclick="acompanhar_orcamento_abrirPagamentos()" class="w-full flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 bg-marca-100 rounded-lg flex items-center justify-center text-marca-700">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                  </div>
+                  <div class="text-left">
+                    <p class="text-sm font-medium text-gray-800">Pagamento</p>
+                    <p class="text-xs text-gray-400">${ORC_DATA.formaPagamento}</p>
+                  </div>
+                </div>
+                <div class="text-marca-600">${SVG_ICONS.chevronDown}</div>
+              </button>
+              <div id="orc-pagamentos-panel" class="hidden mt-3 pt-3 border-t border-gray-100 space-y-2">
+                ${acompanhar_orcamento_renderPagamentos()}
+              </div>
+            </div>
+
+            <!-- Timeline do Orçamento -->
+            <div class="card p-4">
+              <button onclick="acompanhar_orcamento_abrirTimeline()" class="w-full flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 bg-marca-100 rounded-lg flex items-center justify-center text-marca-700">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  </div>
+                  <div class="text-left">
+                    <p class="text-sm font-medium text-gray-800">Linha do Tempo</p>
+                    <p class="text-xs text-gray-400">${ORC_DATA.timeline.filter(t => t.done).length} de ${ORC_DATA.timeline.length} etapas</p>
+                  </div>
+                </div>
+                <div class="text-marca-600">${SVG_ICONS.chevronDown}</div>
+              </button>
+              <div id="orc-timeline-panel" class="hidden mt-3 pt-3 border-t border-gray-100">
+                ${acompanhar_orcamento_renderTimeline()}
+              </div>
+            </div>
+
+            <!-- Fotos do Progresso (apenas se aprovado) -->
+            ${isAprovado ? `
+            <div class="card p-4">
+              <button onclick="acompanhar_orcamento_abrirFotos()" class="w-full flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center text-green-700">
+                    ${SVG_ICONS.photo}
+                  </div>
+                  <div class="text-left">
+                    <p class="text-sm font-medium text-gray-800">Fotos do Progresso</p>
+                    <p class="text-xs text-gray-400">${ORC_DATA.fotosProgresso.length} atualizações da equipe</p>
+                  </div>
+                </div>
+                <div class="text-marca-600">${SVG_ICONS.chevronDown}</div>
+              </button>
+              <div id="orc-fotos-panel" class="hidden mt-3 pt-3 border-t border-gray-100">
+                <div class="grid grid-cols-2 gap-3">
+                  ${acompanhar_orcamento_renderFotos()}
+                </div>
+                <button onclick="mostrarTela('galeria-da-obra')" class="w-full mt-3 py-2.5 rounded-xl border border-marca-200 text-marca-700 text-sm font-medium hover:bg-marca-50 transition-colors active:scale-95">
+                  Ver galeria completa
+                </button>
+              </div>
+            </div>
+            ` : ''}
+          </div>
+
+          <!-- Ações (apenas quando pendente) -->
+          ${!isAprovado ? `
+          <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-5 py-4 safe-area-bottom z-50" style="max-width:430px;margin:0 auto;">
+            <div class="flex gap-3">
+              <button onclick="acompanhar_orcamento_solicitarAlteracao()" class="flex-1 py-3.5 rounded-xl bg-amber-500 text-white text-sm font-semibold hover:bg-amber-600 transition-all active:scale-95 flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                Solicitar Alteração
+              </button>
+              <button onclick="acompanhar_orcamento_aprovar()" class="flex-1 py-3.5 rounded-xl bg-green-600 text-white text-sm font-semibold hover:bg-green-700 transition-all active:scale-95 flex items-center justify-center gap-2 shadow-lg shadow-green-600/20">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Aprovar Orçamento
+              </button>
+            </div>
+            <p class="text-center text-[11px] text-gray-400 mt-2">Ao aprovar, o orçamento entra em produção automaticamente</p>
+          </div>
+          ` : `
+          <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-5 py-4 safe-area-bottom z-50" style="max-width:430px;margin:0 auto;">
+            <button onclick="mostrarTela('chat-com-a-equipe')" class="w-full py-3.5 rounded-xl bg-marca-700 text-white text-sm font-semibold hover:bg-marca-800 transition-all active:scale-95 flex items-center justify-center gap-2 shadow-lg shadow-marca-700/20">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-4.72C3.512 14.042 3 12.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+              Conversar com a Equipe
+            </button>
+          </div>
+          `}
+        </div>
+      `;
+
+      document.getElementById('orc-content').innerHTML = html;
+    }
+
+    renderOrcamento();
+  </script>
+</section>
+
     <!-- TELAS -->
 
   <script>
